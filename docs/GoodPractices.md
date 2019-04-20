@@ -5,9 +5,21 @@
 * Zostawiajcie ślad po tym co zrobiliście
 	* Wspólne repozytorium
 	* Przy całodziennym kodowaniu - min. 10 rewizji (commit-ów)
-* Planuj pracę
+* Organizujcie zespół programistyczny i planuj wspólną pracę
 	* Wewnetrzny system działu programistycznego
-	* GitHub, GitLab, etc.
+	* GitHub, GitLab, Jira etc.
+	* Co potrzebujecie:
+		* Backlog, Tablica (borad), Release-y, Issues, Dyskusje, CI (Continous Integration)
+		* Niezależność od marketingu, sprzedaży, zarządu i działu wsparcia klienta
+	* Bugtracker'y nie nadają się do tego celu
+		* Bugzilla, Mantis, itp.
+	* Systemy helpdesk-owe nie ndają się to tego celu
+		* Zendesk, Freshdesk, ZOHO desk, Jira Service Desk, itd.
+* Zostań Git-owcem
+	* Płynne użwanie Git-a jest w dzisiejszych czasach kluczową umiejętnością każdego programisty
+	* Testuj swoje umiejętności na lokalnym repozytorium i na symulatorach Git-a
+	* Szukaj rewelacyjnych kursów w Internecie
+	* Naucz się rozwiązywać problemy korzystając z serwisu Stackoverflow
 * Używaj TODO
 	* Wpisuj
 	* Czyść - zaimplementuj lub usuwaj
@@ -37,7 +49,7 @@ DRY - Don't Repeat Yourself
 * Organiczaj rozmiar metody i jej skomplikowanie
     * Łatwiej można ją wtedy reużywać
     * Używaj mało wyrażeń warunkowych w metodach IF / WHILE
-        * szczególnie gdy niewiele się różnią zarówno pod kątem warunku, jak i tego co jest wykonywane jeśli warunek jest prawdziwy
+	* szczególnie gdy niewiele się różnią zarówno pod kątem warunku, jak i tego co jest wykonywane jeśli warunek jest prawdziwy
 * Separacja logiki
     * Wydzielaj logikę na zewnątrz (do klasy lub przynajmniej do autonomicznej funkcji)
     * Staraj się wstrzykiwać wszelkie zależności do klasy (zobacz dalej: Prawo Demeter)
