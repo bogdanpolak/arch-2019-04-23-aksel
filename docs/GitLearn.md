@@ -1,4 +1,4 @@
-# Spis treści
+﻿# Spis treści
 
 - [Repozytorium Git-a](#repozytorium-git-a)
 - [Struktura rewizji](#struktura-rewizji)
@@ -16,8 +16,6 @@
 	- [Porządkowanie gałęzi lokalnych](#porządkowanie-gałęzi-lokalnych) 
 	- [Porządkowanie gałęzi zdalnych](#porządkowanie-gałęzi-zdalnych) **[[wersja robocza]]**
 - [Symulatory Git-a](#symulatory-git-a)
-
-
 
 
 # Repozytorium Git-a
@@ -40,7 +38,7 @@ W efekcie system Git ma możliwość natychmiastowego dostępu do dowolnej wersj
 
 **Identyfikator**. Rewizja jest jest unikalnie identyfikowana 40 znakowym kodem SHA-1 (20 bajtów zapisanych heksadecymalnie). Unikalność identyfikatora rewizji jest zapewniona nie tylko w ramach lokalnego repozytorium, ale również globalnie w ramach wielu repozytoriów. Dla łatwiejszego odwoływania się do rewizji w praktyce stosuje się 7-znakowy skrót (pierwsze 7 znaków z 40 znakowego skrótu SHA-1).
 
-![Repozytorium Git](./resources/git01-repozytorium.png)
+![Repozytorium Git](./resources-gl/git01-repozytorium.png)
 
 **Struktura**. Każda rewizja połączona jest z poprzednią wersją, a dokładniej to *nowsza* wersja wskazuje *starszą*. W efekcie możliwe jest aby jedna *starsza* rewizja była wskazywana równocześnie przez kilka *nowszych* rewizji. Taką sytuację nazywa się rozgałęzieniem.
 
@@ -88,7 +86,7 @@ Więcej informacji o poleceniach git wraz z dokładniejszym wyjaśnieniem w arty
 
 Git jest rozproszonym systemem wersjonowania kodu źródłowego, czyli programista zazwyczaj korzysta ze swojej własnej kopii repozytorium głównego. Lokalne repozytorium jest w pełni autonomiczną kopią repozytorium Git-a. Dzięki takiemu rozwiązaniu możliwe jest zatwierdzanie zmian bez połączenia sieciowego (sieć lokalna lub sieć Internet). 
 
-![Zdalne repozytorium](./resources/git02-zdalne.png)
+![Zdalne repozytorium](./resources-gl/git02-zdalne.png)
 
 Repozytorium lokalne tworzone jest na dwa sposoby: 
 * poleceniem ```git init``` - powstaje puste repozytorium w katalogu, w którym wydano takie polecenie.
@@ -123,7 +121,7 @@ $ git remote add xstream https://github.com/andrea-magni/MARS.git
 
 Typowym schematem pracy w repozytoriach OpenSource jest zgłaszanie zmian, które wprowadzamy najpierw w swoim zdalnym repozytorium projektowym (`origin`). Portale takie GitHub analizują różnice między repozytorium autorskim (źródłowym) a jego klonem (`fork`) i gdy w naszym sklonowanym repozytorium pojawiają się nowe rewizje to możemy w prosty sposób zgłosić żądnie aktualizacji (`pull request`).
 
-![Diagram: schemat pracy z repozytoriami](./resources/github02-pull-request.png)
+![Diagram: schemat pracy z repozytoriami](./resources-gl/github02-pull-request.png)
 
 Nasze repozytorium zdalne domyślnie nazywane jest `origin` i tej nazwy warto się trzymać. Z kolei nadrzędne zdalne repozytorium autorskie nazywane jest w skrócie `upstream`.
 
@@ -204,13 +202,13 @@ git update-index --skip-worktree Project1.cbproj
 
 # RAD Studio i Git
 
-![Delphi i GitHub](./resources/git03-delphi-git.png)
+![Delphi i GitHub](./resources-gl/git03-delphi-git.png)
 
 Środowisko RAD Studio (Delphi i C++Builder) zawiera integrację z Git-em nazywaną VersionInsight. Rozszerzenie to pozwala na przeglądanie zmian oraz wydawanie kilku najprostszych poleceń git-a bezpośrednio ze środowiska IDE. W praktyce najlepiej sprawdza się w czasie rejestrowania zmian oraz dodawania plików do repozytorium lokalnego (polecenie `git add` i `git commit`).
 
 Aby zacząć korzystać z tej integracji w RAD Studio konieczna jest konfiguracji opcji VersionInsight:
 
-![](./resources/opcje-IDE-dla-Gita.png)
+![](./resources-gl/opcje-IDE-dla-Gita.png)
 
 
 
@@ -250,7 +248,7 @@ git branch -D poprawka59
 
 W strukturach repozytorium gałąź jest obiektem, który wskazuję na aktualną rewizję, z kolei ta rewizja wskazuje na wcześniejszą rewizję (wersję) itd. Czyli struktura przykładowego repozytorium z jedną gałęzią `master` mogłaby wyglądać w ten sposób:
 
-![Po operacji commit](./resources/git-commit-before.png)
+![Po operacji commit](./resources-gl/git-commit-before.png)
 
 Wskaźnik ```HEAD``` to bieżące miejsce, czyli miejsce w które są wstawiane nowe zmiany `git commit` oraz gdzie wykonywane są inne bieżące informacje, takie jak `diff` i wiele innych.
 
@@ -258,7 +256,7 @@ Usuwając gałąź do repozytorium lub dodając ją robimy tylko prostą operacj
 
 Równie łatwo jak dodawać/usuwać można także przesuwać gałąź na aktualną rewizję (`HEAD`). Spójrzmy na przykład:
 
-![Diagram z dwoma gałęziami](./resources/git-branch-example1.png)
+![Diagram z dwoma gałęziami](./resources-gl/git-branch-example1.png)
 
 Gałąź `poprawka59` ustawioną jest na wcześniejszej rewizji, jeśli chcemy ją przestawić na aktualne miejsce to możemy usunąć gałąź i od razu ją dodać:
 
@@ -275,7 +273,7 @@ git branch -f poprawka59
 
 W wyniku wywołanych poleceń przesuniemy gałąź na bieżącą wersję w historii rewizji:
 
-![Diagram po przesunięciu gałęzi](./resources/git-branch-example2.png)
+![Diagram po przesunięciu gałęzi](./resources-gl/git-branch-example2.png)
 
 ## Przełączanie między gałęziami
 
@@ -287,11 +285,11 @@ git checkout poprawka59
 
 Po wykonaniu tej operacji, głowa ```HEAD``` zostanie przestawiona na gałąź ```poprawka59```, czyli bieżące operacje będą wykonywane w tym miejscu: 
 
-![](./resources/git-checkout-step1.png)
+![](./resources-gl/git-checkout-step1.png)
 
 Po zatwierdzeniu zmian zostanie utworzona nowa rewizja, a wskaźnik gałęzi przesunięty na nią:
 
-![](./resources/git-checkout-step2.png)
+![](./resources-gl/git-checkout-step2.png)
 
 Kolejne przełączenie się na gałąź ```master```, spowoduje, że w plikach roboczych znikną wprowadzone wcześniej zmiany. Wywołujemy:
  
@@ -330,7 +328,7 @@ W systemie Git rozgałęzienie polega na stworzeniu w strukturach repozytorium n
 
 Aby rozgałęzić historię wystarczy przełączyć się na gałąź ustawioną gdzieś na starszej niż aktualna rewizji w historii repozytorium i zatwierdzić zmianę.
 
-![Rozgałęziona historia](./resources/git-history-branching.png)
+![Rozgałęziona historia](./resources-gl/git-history-branching.png)
 
 ## Złączanie gałęzi
 
@@ -338,7 +336,7 @@ Zapewne w krótkim czasie po rozgałęzieniu historii konieczne okaże się jej 
 
 Wcześniej stworzyliśmy gałąź ```poprawka59``` przeznaczoną do przygotowania łatki dla błędu nr 59. Przyjmijmy, że do zrealizowania tego zadania potrzebne były dwie rewizje (na diagramie poniżej są to rewizje ```6ede961``` oraz ```51e7151```). Teraz chcemy scalić te zmiany z gałęzią główną, ale w między czasie pojawiła się w niej nowa rewizja (```f3137c0```). Niestety zwykłe przepisanie zmian do gałęzi głównej ```master``` nie jest możliwe, ponieważ modyfikowane były te same pliki w obu gałęziach. W takiej sytuacji musi dojść do trójstronnego scalenia.
 
-![Git: trójstronne scalanie](./resources/git-three-way-merge.png)
+![Git: trójstronne scalanie](./resources-gl/git-three-way-merge.png)
 
 Polecenie ```git merge``` informuje system o potrzebie scalenia aktualnej pozycji (```HEAD```) ze wskazaną jako parametr gałęzią. 
 
@@ -368,7 +366,7 @@ git checkout origin/master
 
 Dostajemy następującą sytuację, czyli odłączoną głowę.
 
-![Głowa odłączona po przełączeniu na origin/master](./resources/git-head-detached.png)
+![Głowa odłączona po przełączeniu na origin/master](./resources-gl/git-head-detached.png)
 
 Nie jest to zalecany stan i raczej powinno się unikać sytuacji gdy głowa nie wskazuje jednej z lokalnych gałęzi. Jeśli potrzebujemy wykonywać zmiany na tym miejscu to taką operację ```git checkout``` powinniśmy wykonać z opcją ```-b```, dodając nową gałąź.
 
