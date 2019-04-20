@@ -1,54 +1,85 @@
-# Dobre praktyki programowania
+﻿# Dobre praktyki programowania
 
-### Praca zespołowa
+## 1. Praca zespołowa
 
 * Zostawiajcie ślad po tym co zrobiliście
-    * Wspólne repozytorium
-    * Przy całodziennym kodowaniu - min. 10 rewizji (commit-ów)
+	* Wspólne repozytorium
+	* Przy całodziennym kodowaniu - min. 10 rewizji (commit-ów)
 * Planuj pracę
 	* Wewnetrzny system działu programistycznego
 	* GitHub, GitLab, etc.
+* Używaj TODO
+	* Wpisuj
+	* Czyść - zaimplementuj lub usuwaj
+	* Nie śmieć
 * Przeglądy kodu źródłowego
-    * Na początek "na żywo" - spotkanie w jednej sali
-    * Docelowo off-line
+	* Na początek "na żywo" - spotkanie w jednej sali
+	* Docelowo off-line
 * Sprawdź pracę parami przy trudniejszych tematach
-    * Pair Programming - jedno z wymagań metodyki XP
+	* Pair Programming - jedno z wymagań metodyki XP
 
-### Zapachy kodu
-
-* Kreatywność i poznawanie nowych technik
-	* Nie programuj ciągle w ten sam sposób. Ucz się i eksperymentuj z nowymi sposobami kodowania.
-* Zasady czystego kodu
-	* Inspuruj się zasadami guru informatyki, ale ztwórz zasady odpowiednie dla zespołu w jakim pracujesz
-	* Naucz się rozpoznawać zapachy kodu: kiedy śmierdzi, a kiedy ma miły zapach.
-
-### DRY
+## 2. Nie powtarzaj się
 
 DRY - Don't Repeat Yourself
 
 * Unikaj kopiuj-wklej (kopy-pasteryzm)
+    * Nie kopiuj kodu wewnątrz swojego projektu lub z jednego projektu do drugiego
+    * Unikaj kopiowania kodu z projektu kolegi
+    * Kopiowanie z Internetu jest OK
 * Uogólniaj rozwiązanie
-    * uzywaj rekodrów, obiektów, tablic i list
-    * odnajduj podobne wzorce i buduj reużywalne moduły
-* W metodach używaj mało wyrażeń warunkowych IF / WHILE
-    * szczególnie gdy niewiele się różnią zarówno pod kątem warunku, jak i tego co jest wykonywane jeśli warunek jest prawdziwy
+    * Używaj helperów (Class Helpers)
+    * Zastosuj komponenty (TComponent)
+    * Zastosuj klasy i obiekty (OOP)
+    * Unikaj mega unitów (Globals.pas, Utils.pas, itp.)
+    * Unikaj samodzielnych funkcji i procedur, staraj się pakować je w klasy jako metody statyczne (metody klasowe)
+    * Używaj rekodrów, obiektów, tablic i list zamiast dużej liczy parametrów lub zmiennych lokalnych
+    * Odnajduj podobne wzorce i buduj reużywalne moduły
+* Organiczaj rozmiar metody i jej skomplikowanie
+    * Łatwiej można ją wtedy reużywać
+    * Używaj mało wyrażeń warunkowych w metodach IF / WHILE
+        * szczególnie gdy niewiele się różnią zarówno pod kątem warunku, jak i tego co jest wykonywane jeśli warunek jest prawdziwy
 * Separacja logiki
     * Wydzielaj logikę na zewnątrz (do klasy lub przynajmniej do autonomicznej funkcji)
-    * Staraj się wstrzykiwać wszelkie zależności do klasy (Prawo Demeter)
+    * Staraj się wstrzykiwać wszelkie zależności do klasy (zobacz dalej: Prawo Demeter)
+
+## 2. Formatuj kod
+
+* Praca zespołowa
+* Przyzwyczajenie wszystkich członków zespołu do jednego formatu
+
+## 3. Optymalizuj kod i jego jakość
+
+* Dotyczy szczególnie wspólnego kodu
+* Zero ostrzeżeń i podpowiedzi kompilatora
+* Porządkuj włączane moduły (czyszczenie `uses` w sekcjach `interface` i `implementation`)
     
-### Czysty kod w Delphi
+## 4. Pisz czysty (czytelny) kod w Delphi
 
 * Class helpers
-  - metody operujace na klsach VCL-a i RTL-a
+	* metody operujace na klsach VCL-a i RTL-a
 * Nazwy
 	* Zwróć uwagę na nazwy zmiennych, funkcji i struktur
 * Wielkość
 	* Małe i czytelne metody / funkcje
 * Programowanie obiektowe
-  - Staraj się nie pisać samodzielnych funkcji i procedur 
+	*  Staraj się nie pisać samodzielnych funkcji i procedur 
+* Zapachy kodu - kod śmierdzący (stęchniały)
+	* Naucz się rozpoznawać zapachy kodu: kiedy śmierdzi, a kiedy ma miły zapach.
+	* Kreatywność i poznawanie nowych technik
+		* Nie programuj ciągle w ten sam sposób. Ucz się i eksperymentuj z nowymi sposobami kodowania.
+	* Zasady czystego kodu
+		* Inspuruj się zasadami guru informatyki, ale ztwórz zasady odpowiednie dla zespołu w jakim pracujesz
 
+## 5. Architektura - Prawo Demeter
 
-### Zasady SOLID
+* LoD = Law of Demeter
+* Rozmawiaj tylko z przyjaciółmi, nidy z obcymi
+* Klasa musi mieć dostęp lokalny do wszystkich zaleźności
+	* Nie powinna odwoływać się do innych globanych struktur biznesowych
+
+[Prezentacja na slideshare.net](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
+
+## 6. Architektura - Zasady SOLID
 
 ![(c) Mohit Rajput - mohitrajput987 Apr 30 '17 https://dev.to/mohitrajput987/coding-best-practices-part-1-naming-conventions--class-designing-principles](https://res.cloudinary.com/practicaldev/image/fetch/s--VIyIhNNs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://s11.postimg.org/r5n293c4z/SOLID.jpg)
 
@@ -76,16 +107,7 @@ DRY - Don't Repeat Yourself
     * Jeśli klasa warstwy wyższej tworzy obiekty warstwy niższej to można zastosować: IoC = Inversion of Control
     * Trzech muszkieterów: DIP, IoC, DI (Dependency Injection)
 
-### Prawo Demeter
-
-* LoD = Law of Demeter
-* Rozmawiaj tylko z przyjaciółmi, nidy z obcymi
-* Klasa musi mieć dostęp lokalny do wszystkich zaleźności
-	* Nie powinna odwoływać się do innych globanych struktur biznesowych
-
-[Prezentacja na slideshare.net](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
-
-### Testowanie
+## 7. Architektura - Testowanie (separacja jednostek)
 
 * Testuj kod często
 * Postaraj się, aby robiły to za Ciebie automaty
