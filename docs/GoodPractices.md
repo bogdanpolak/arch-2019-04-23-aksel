@@ -54,17 +54,16 @@ DRY - Don't Repeat Yourself
     * Wydzielaj logikę na zewnątrz (do klasy lub przynajmniej do autonomicznej funkcji)
     * Staraj się wstrzykiwać wszelkie zależności do klasy (zobacz dalej: Prawo Demeter)
 
-## 2. Formatuj kod
-
-* Praca zespołowa
-* Przyzwyczajenie wszystkich członków zespołu do jednego formatu
-
 ## 3. Optymalizuj kod i jego jakość
 
+* Formatuj kod
+	* Praca zespołowa
+	* Przyzwyczajenie wszystkich członków zespołu do jednego formatu
+* Optymalizuj kod i jego jakość
+	* Zero ostrzeżeń i podpowiedzi kompilatora
+	* Porządkuj włączane moduły (czyszczenie `uses` w sekcjach `interface` i `implementation`)
 * Dotyczy szczególnie wspólnego kodu
-* Zero ostrzeżeń i podpowiedzi kompilatora
-* Porządkuj włączane moduły (czyszczenie `uses` w sekcjach `interface` i `implementation`)
-    
+
 ## 4. Pisz czysty (czytelny) kod w Delphi
 
 * Class helpers
