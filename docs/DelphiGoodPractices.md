@@ -151,7 +151,25 @@ DRY - `Don't Repeat Yourself`
 
 ## 6. Architektura - Separacja warstw - model MVC
 
-// TODO: Uzupełnić opis i dodać diagram MVC
+* MVC = `Model View Controler`
+* Unikaj kodu spaghetti
+    * Nie mieszaj manipulacji na danych lub realizacji logiki systemu w event-ach.
+    * `OnClick Developer`
+* Jedno zadanie realizowane jest przez 3 klasy
+    * Proces 
+        * -> Akcja użytkownika
+        * -> Zebranie parametrów akcji użytkownika i przekazanie ich obiektowi **Kontrolera** 
+        * -> **Kontroler** sprawdza dane, o dane prosi **Model**
+        * -> **Kontroler** weryfikuje aktualny stan i modyfikuje go na podstawie danych i akcji użytkownika
+        * -> **Kontroler** zleca modelowi modyfikacje danych
+        * -> **Model** lub **Kontroler** wysyła powiadomienie, które powinien nasłuchiwać **Widok** 
+        * -> **Widok** aktualizuje wygląd aplikacji na podstawie danych w **Modelu**
+    * Czy warto? W prawdziwych projektach trywialny kod potrafi się rozrosnąć do ogromnych rozmiarów, z góry się na to przygotowujemy, bo później na poprawianie brakuje czasu
+* Konieczny mechanizm powiadamiania obiekt => obiekt
+    * Można ustawiać flagę
+    * Przekazywać wskaźnik do funkcji (np. metodę anonimową)
+    * Odwołać się do dedykowanego do tego celu zdarzenia (taki event trzeba samodzielnie stworzyć)
+![](./resources-mvc/MVC-Process.png)
 
 ## 7. Architektura - Zasady SOLID
 
