@@ -11,7 +11,7 @@ Repozytorium wykorzystywane w trakcie szkolenia **Nowoczesne podejście do progr
 * Praca zespołowa
 	* [Nauka Git-a](./docs/GitLearn.md)
 * Dobre pratyki programowania w Delphi
-	* [artykuł: Dobre pratyki ..](./docs/GoodPractices.md)
+	* [artykuł: Dobre Pratyki ..](./docs/DelphiGoodPractices.md)
 * Książki
 	* [CleanCode - Robert C. Martin](./docs/RobertMartinCleanCode.md)
 
