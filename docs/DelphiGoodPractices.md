@@ -199,24 +199,41 @@ DRY - `Don't Repeat Yourself`
     * Jeśli klasa warstwy wyższej tworzy obiekty warstwy niższej to można zastosować: IoC = `Inversion of Control`
     * Trzech muszkieterów: DIP, IoC, DI (`Dependency Injection`)
 
-## 8. Architektura - Testowanie (separacja jednostek)
+## 8. Bezpieczeństwo - Testowanie jednostkowe (separacja jednostek)
 
-// TODO: Rozdzielić testowanie jednostkowe od testów akceptacyjnych
-
-* Testuj kod często
-* Postaraj się, aby robiły to za Ciebie automaty
-    * Testy jednostkowe
-        * DUnitX
-        * `TestInsight` (Stefan Glienke) [link](https://bitbucket.org/sglienke/testinsight/wiki/Home)
-    * Testy integracyjne
-        * DUnitX
-    * Testy akceptacyjne
-        * Nagrywanie i odtwarzanie
-        * `Ranorex Studio` - [link](https://www.ranorex.com/windows-desktop-test-automation/)
-        * `Smartbear TestComplete` - [link](https://smartbear.com/product/testcomplete/)
-* Czasami warto popracować w TDD
+* Najpierw architektura
+    * Rozpoczęcie testowania jednostkowego dobrze zorganizowanego architektonicznie projektu
+    * Próby testów jednostkowych na mocno zależnym (sprzężonym) projekcie zazwyczaj kończą się niepowodzeniem
+* Jak to się robi?
+    * Dla projektu aplikacji tworzymy dodatkowy projekt testowy
+    * Sami programujemy w Delphi testy sprawdzające daną jednostkę
+    * Taki test zazwyczaj: tworzy obiekt (jednostkę) wywołuje jedną z metod (przekazując wybrane wartości parametrów) i weryfikuje poprawność wyników (tzw. sekcja `assert`)
+    * Zazwyczaj konieczne jest zaślepienie dodatkowych zależności przy pomocy tzw. pseudo-obiektów (`mocks`)
+    * Staramy się odseparować testowany obiekt od wszystkich innych zależności
+* Praktyki
+    * Testuj kod często
+    * Automatycznie uruchamiane są testy
+    * Jeśli to możliwe to uruchamiamy wszystkie testy
+    * Głównym celem testów jednostkowych jest zabezpieczenie programistów (czasami takie testy nazywane są `Safety net`)
+* Narzędzia
+    * DUnitX (instalowany razem z IDE)
+    * `TestInsight` (Stefan Glienke) [link](https://bitbucket.org/sglienke/testinsight/wiki/Home)
+* Warto wypróbować TDD
     * Krótkie cykle:
         1. Piszę prosty test
         2. Piszę kod spełniający ten test
         3. Refaktoryzuję kod test i kod produkcyjny
 
+## 9. Automatyzacja - Automatyzacja testów akceptacyjnych
+
+* Środowisko pozwalające nagrywać akcje na interfejsie aplikacji
+    * Ważne! Zakres rozpoznawanych obiektów
+    * Czasami taka nagrywarka nie jest w stanie rozpoznać obiektu i potrafi zarejestrować jedynie współrzędne kliknięcia myszką i sekwencję wprowadzonych znaków
+* Automatyczne odtwarzanie testów
+    * Plan
+    * Automatyczna integracja (`CI`)
+    * Raportowanie
+    * Zapamiętywanie ekranów w raportach
+Dostępne narzędzia (komercyjne)
+    * `Ranorex Studio` - [link](https://www.ranorex.com/windows-desktop-test-automation/)
+    * `Smartbear TestComplete` - [link](https://smartbear.com/product/testcomplete/)
