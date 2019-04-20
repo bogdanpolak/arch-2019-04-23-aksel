@@ -90,7 +90,64 @@ DRY - `Don't Repeat Yourself`
 
 [Prezentacja na `slideshare.net`](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
 
-// TODO: Dodać przykład w Delphi LoD
+* Przykład kodu Delphi, który narusza zasadę LoD:
+![](./resources-lod/lod01_incorrect.png)
+    * Zasada LoD jest tutaj wielokrotnie naruszana
+    * Pomaga przeniesienie kodu do `TDataModule1`
+* Po przeniesieniu do TDataModule1:
+    * `Form1` (`Unit1.pas`)
+        ```pas
+        procedure TForm1.Button1Click(Sender: TObject);
+        var
+            discount: Double;
+        begin
+            discount := 0.05;
+            DataModule1.SetOrder_CurrentItem_Price(discount);
+            Unit2.DataModule1.FDQuery1.Post();
+        end;
+        ```
+    * `DataModule1` (`Unit2.pas`)
+        ```pas
+        procedure TDataModule1.SetOrder_CurrentItem_Price ( discount: double );
+        var
+            ListPrice: TBcd;
+            ItemPrice: TBcd;
+        begin
+            if discount>1 then
+                raise EPosSystemException.Create(StrPosInvalidDiscoun);
+            ListPrice := FDQuery2.FieldByName('ProductPrice').AsBCD;
+            Data.FmtBcd.BcdMultiply(ListPrice, DoubleToBcd(1-discount), ItemPrice);
+            Data.FmtBcd.NormalizeBcd(ItemPrice, ItemPrice, 16, 2);
+            with FDQuery1 do begin
+                if State = dsBrowse then
+                    Edit();
+                FieldByName('ItemPrice').AsBCD := ItemPrice;
+            end;
+        end;
+        ```
+        * Nadal zasada LoD jest naruszona w dwóch miejscach
+* Lokalne (przyjaciel, już nie obcy) odwołanie do TDataModule1:
+    ```pas
+    type
+        TForm1 = class(TForm)
+            ...
+        private
+            FDataModulePOS: TDataModule1;
+        public
+            property DataModulePOS: TDataModule1 read FDataModulePOS write FDataModulePOS;
+        end;
+
+    implementation
+    
+    procedure TForm1.Action1Execute(Sender: TObject);
+    var
+        discount: Extended;
+    begin
+        discount := 0.05;
+        Self.DataModulePOS.SetOrder_CurrentItem_Price(discount);
+        Self.DataModulePOS.Order_Post;
+    end;
+    ```
 
 ## 6. Architektura - Separacja warstw - model MVC
 
