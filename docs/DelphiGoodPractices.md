@@ -6,20 +6,20 @@
 	* Wspólne repozytorium
 	* Przy całodziennym kodowaniu - min. 10 rewizji (commit-ów)
 * Organizujcie zespół programistyczny i planuj wspólną pracę
-	* Wewnetrzny system działu programistycznego
-	* GitHub, GitLab, Jira etc.
+	* Wewnętrzny system działu programistycznego
+	* `GitHub`, `GitLab`, `Jira` etc.
 	* Co potrzebujecie:
-		* Backlog, Tablica (borad), Release-y, Issues, Dyskusje, CI (Continous Integration)
+		* `Backlog`, Tablica (`Board`), `Release-y`, `Issues`, Dyskusje, CI (`Continuous Integration`)
 		* Niezależność od marketingu, sprzedaży, zarządu i działu wsparcia klienta
-	* Bugtracker'y nie nadają się do tego celu
-		* Bugzilla, Mantis, itp.
-	* Systemy helpdesk-owe nie ndają się to tego celu
-		* Zendesk, Freshdesk, ZOHO desk, Jira Service Desk, itd.
+	* Systemy rejestracji błędów nie nadają się do tego celu
+		* `Bugzilla`, `Mantis`, itp.
+	* Systemy helpdesk-owe nie nadają się to tego celu
+		* `Zendesk`, `Freshdesk`, `ZOHO desk`, `Jira Service Desk`, itd.
 * Zostań Git-owcem
-	* Płynne użwanie Git-a jest w dzisiejszych czasach kluczową umiejętnością każdego programisty
+	* Płynne używanie Git-a jest w dzisiejszych czasach kluczową umiejętnością każdego programisty
 	* Testuj swoje umiejętności na lokalnym repozytorium i na symulatorach Git-a
 	* Szukaj rewelacyjnych kursów w Internecie
-	* Naucz się rozwiązywać problemy korzystając z serwisu Stackoverflow
+	* Naucz się rozwiązywać problemy korzystając z serwisu `StackOverflow`
 * Używaj TODO
 	* Wpisuj
 	* Czyść - zaimplementuj lub usuwaj
@@ -28,25 +28,25 @@
 	* Na początek "na żywo" - spotkanie w jednej sali
 	* Docelowo off-line
 * Sprawdź pracę parami przy trudniejszych tematach
-	* Pair Programming - jedno z wymagań metodyki XP
+	* `Pair Programming` - jedno z wymagań metodyki XP
 
 ## 2. Nie powtarzaj się
 
-DRY - Don't Repeat Yourself
+DRY - `Don't Repeat Yourself`
 
 * Unikaj kopiuj-wklej (kopy-pasteryzm)
     * Nie kopiuj kodu wewnątrz swojego projektu lub z jednego projektu do drugiego
     * Unikaj kopiowania kodu z projektu kolegi
     * Kopiowanie z Internetu jest OK
 * Uogólniaj rozwiązanie
-    * Używaj helperów (Class Helpers)
-    * Zastosuj komponenty (TComponent)
+    * Używaj helper-ów (`Class Helpers`)
+    * Zastosuj komponenty (`TComponent`)
     * Zastosuj klasy i obiekty (OOP)
-    * Unikaj mega unitów (Globals.pas, Utils.pas, itp.)
+    * Unikaj mega unitów (`Globals.pas`, `Utils.pas`, itp.)
     * Unikaj samodzielnych funkcji i procedur, staraj się pakować je w klasy jako metody statyczne (metody klasowe)
-    * Używaj rekodrów, obiektów, tablic i list zamiast dużej liczy parametrów lub zmiennych lokalnych
+    * Używaj rekordów, obiektów, tablic i list zamiast dużej liczy parametrów lub zmiennych lokalnych
     * Odnajduj podobne wzorce i buduj reużywalne moduły
-* Organiczaj rozmiar metody i jej skomplikowanie
+* Ograniczaj rozmiar metody i jej skomplikowanie
     * Łatwiej można ją wtedy reużywać
     * Używaj mało wyrażeń warunkowych w metodach IF / WHILE
 	* szczególnie gdy niewiele się różnią zarówno pod kątem warunku, jak i tego co jest wykonywane jeśli warunek jest prawdziwy
@@ -66,8 +66,8 @@ DRY - Don't Repeat Yourself
 
 ## 4. Pisz czysty (czytelny) kod w Delphi
 
-* Class helpers
-	* metody operujace na klsach VCL-a i RTL-a
+* `Class helpers`
+	* metody operujące na klasach VCL-a i RTL-a
 * Nazwy
 	* Zwróć uwagę na nazwy zmiennych, funkcji i struktur
 * Wielkość
@@ -79,29 +79,29 @@ DRY - Don't Repeat Yourself
 	* Kreatywność i poznawanie nowych technik
 		* Nie programuj ciągle w ten sam sposób. Ucz się i eksperymentuj z nowymi sposobami kodowania.
 	* Zasady czystego kodu
-		* Inspuruj się zasadami guru informatyki, ale ztwórz zasady odpowiednie dla zespołu w jakim pracujesz
+		* Inspiruj się zasadami guru informatyki, ale stwórz zasady odpowiednie dla zespołu w jakim pracujesz
 
 ## 5. Architektura - Prawo Demeter
 
 * LoD = Law of Demeter
-* Rozmawiaj tylko z przyjaciółmi, nidy z obcymi
-* Klasa musi mieć dostęp lokalny do wszystkich zaleźności
-	* Nie powinna odwoływać się do innych globanych struktur biznesowych
+* Rozmawiaj tylko z przyjaciółmi, nigdy z obcymi
+* Klasa musi mieć dostęp lokalny do wszystkich zależności
+	* Nie powinna odwoływać się do innych globalnych struktur biznesowych
 
-[Prezentacja na slideshare.net](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
+[Prezentacja na `slideshare.net`](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
 
 ## 6. Architektura - Zasady SOLID
 
-![(c) Mohit Rajput - mohitrajput987 Apr 30 '17 https://dev.to/mohitrajput987/coding-best-practices-part-1-naming-conventions--class-designing-principles](https://res.cloudinary.com/practicaldev/image/fetch/s--VIyIhNNs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://s11.postimg.org/r5n293c4z/SOLID.jpg)
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--VIyIhNNs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://s11.postimg.org/r5n293c4z/SOLID.jpg)
 
-1. SRP = Single Responsibility Principle
-    * Klasa powinna być odpowidzialna za jedną rzecz
-2. OCP = Open/Close Principle
+1. SRP = `Single Responsibility Principle`
+    * Klasa powinna być odpowiedzialna za jedną rzecz
+2. OCP = `Open/Close Principle`
     * Klasa musi być otwarta na rozbudowę, ale zamknięta na poprawę dobrego kodu
-    * Podejrzane: wielopoziomowe if-ów / casów
+    * Podejrzane: wielopoziomowe if-ów / case-ów
     * Rozwiązania OOP: abstrakcja, polimorfizm, fabryki
     * Użycie wzorca Fabryki Abstrakcyjnej
-3. LSP = Liskov Substition Principle
+3. LSP = `Liskov Substitution Principle`
     * Poprawnie zbudowane drzewo dziedziczenia nie wymaga nadpisywania metod ojca, w celu poprawnego działania algorytmu
     * ```TKwadrat != class(TProstokąt)```
         * zobacz jak działa metoda WyliczPole
@@ -110,13 +110,13 @@ DRY - Don't Repeat Yourself
         TKwadrat = class(TFigure)
         TProstokąt = class(TFigure)
         ```
-4. ISP = Interface Segreation Principle
+4. ISP = `Interface Segregation Principle`
     * Podziel interfejsy na mniejsze (spójne dziedzinowo)
-5. DIP = Dependency Invertion Principle
+5. DIP = `Dependency Inversion Principle`
     * Klasy z dwóch różnych warstw separuj interfejsami
     * Przykład: Klasy dziedzinowe (realizujące funkcjonalność) oraz klasy składujące dane (zbiory danych).
-    * Jeśli klasa warstwy wyższej tworzy obiekty warstwy niższej to można zastosować: IoC = Inversion of Control
-    * Trzech muszkieterów: DIP, IoC, DI (Dependency Injection)
+    * Jeśli klasa warstwy wyższej tworzy obiekty warstwy niższej to można zastosować: IoC = `Inversion of Control`
+    * Trzech muszkieterów: DIP, IoC, DI (`Dependency Injection`)
 
 ## 7. Architektura - Testowanie (separacja jednostek)
 
@@ -124,13 +124,13 @@ DRY - Don't Repeat Yourself
 * Postaraj się, aby robiły to za Ciebie automaty
     * Testy jednostkowe
         * DUnitX
-        * TestInsight (Stefan Glienke) [link](https://bitbucket.org/sglienke/testinsight/wiki/Home)
+        * `TestInsight` (Stefan Glienke) [link](https://bitbucket.org/sglienke/testinsight/wiki/Home)
     * Testy integracyjne
         * DUnitX
     * Testy akceptacyjne
         * Nagrywanie i odtwarzanie
-        * Ranorex Studio - [link](https://www.ranorex.com/windows-desktop-test-automation/)
-        * Smartbear TestComplete - [link](https://smartbear.com/product/testcomplete/)
+        * `Ranorex Studio` - [link](https://www.ranorex.com/windows-desktop-test-automation/)
+        * `Smartbear TestComplete` - [link](https://smartbear.com/product/testcomplete/)
 * Czasami warto popracować w TDD
     * Krótkie cykle:
         1. Piszę prosty test
