@@ -5,7 +5,7 @@
 * Zostawiajcie ślad po tym co zrobiliście
 	* Wspólne repozytorium
 	* Przy całodziennym kodowaniu - min. 10 rewizji (commit-ów)
-* Organizujcie zespół programistyczny i planuj wspólną pracę
+* Organizujcie zespół programistyczny i planujcie wspólną pracę
 	* Wewnętrzny system działu programistycznego
 	* `GitHub`, `GitLab`, `Jira` etc.
 	* Co potrzebujecie:
@@ -40,8 +40,8 @@ DRY - `Don't Repeat Yourself`
     * Kopiowanie z Internetu jest OK
 * Uogólniaj rozwiązanie
     * Używaj helper-ów (`Class Helpers`)
-    * Zastosuj komponenty (`TComponent`)
-    * Zastosuj klasy i obiekty (OOP)
+    * Zbuduj i wykorzystuj komponenty (klasy dziedziczące z `TComponent`)
+    * Buduj i używaj klas i obiektów (OOP)
     * Unikaj mega unitów (`Globals.pas`, `Utils.pas`, itp.)
     * Unikaj samodzielnych funkcji i procedur, staraj się pakować je w klasy jako metody statyczne (metody klasowe)
     * Używaj rekordów, obiektów, tablic i list zamiast dużej liczy parametrów lub zmiennych lokalnych
