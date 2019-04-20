@@ -83,14 +83,20 @@ DRY - `Don't Repeat Yourself`
 
 ## 5. Architektura - Prawo Demeter
 
-* LoD = Law of Demeter
+* LoD = `Law of Demeter`
 * Rozmawiaj tylko z przyjaciółmi, nigdy z obcymi
 * Klasa musi mieć dostęp lokalny do wszystkich zależności
 	* Nie powinna odwoływać się do innych globalnych struktur biznesowych
 
 [Prezentacja na `slideshare.net`](https://www.slideshare.net/vladimirtsukur/law-of-demeter-objective-sense-of-style)
 
-## 6. Architektura - Zasady SOLID
+// TODO: Dodać przykład w Delphi LoD
+
+## 6. Architektura - Separacja warstw - model MVC
+
+// TODO: Uzupełnić opis i dodać diagram MVC
+
+## 7. Architektura - Zasady SOLID
 
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--VIyIhNNs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://s11.postimg.org/r5n293c4z/SOLID.jpg)
 
@@ -118,7 +124,9 @@ DRY - `Don't Repeat Yourself`
     * Jeśli klasa warstwy wyższej tworzy obiekty warstwy niższej to można zastosować: IoC = `Inversion of Control`
     * Trzech muszkieterów: DIP, IoC, DI (`Dependency Injection`)
 
-## 7. Architektura - Testowanie (separacja jednostek)
+## 8. Architektura - Testowanie (separacja jednostek)
+
+// TODO: Rozdzielić testowanie jednostkowe od testów akceptacyjnych
 
 * Testuj kod często
 * Postaraj się, aby robiły to za Ciebie automaty
