@@ -27,7 +27,7 @@
     ```sh
     git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
     ```
-	
+
 1. Konto na GitHub
 	* Założenie konta GitHub-ie
 	* https://github.com/join
@@ -69,12 +69,13 @@
 
 ---
 
-* A: 
-* B: 
-* C: 
-* D: 
-* E:
-* F: 
-* Trener: 
+* A: Rafał Pitlok / RafalPitlok
+* B: Rafał Wodok / Extermi111
+* C: Grzegorz Najduch / gery77n
+* D: Nina Czaplicka / NinaCzaplicka
+* E: Małgorzata Hetman / mhetman
+* F: Marcin Kajtoch / marcinkajtoch
+* G: Paweł Kantor / laki94
+* Trener: Bogdan Polak
 
 ---
