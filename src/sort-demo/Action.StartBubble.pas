@@ -9,6 +9,7 @@ uses
 type
   TStartBubbleAction = class (TSortAction)
   private
+    FSwapCounter: Integer;
     procedure BubbleSort(ABoard: TBoard; ABoardView: IBoardView);
     procedure WaitMilisecond(timeMs: double);
   public
@@ -41,33 +42,27 @@ begin
   Form1.PrepareSortDemo(paintBox, data);
   itemCount := CountVisibleItems(paintbox);
   board := TBoard.Create;
+  sResult := TSortResults.Create;
+  with sResult do
+  begin
+    Name := 'BubbleSort';
+    DataSize := itemCount;
+  end;
   try
+    FSwapCounter := 0;
     board.GenerateData(itemCount);
     data := board.Data;
     boardView := TBoardView.CreateAndInit(paintBox, board);
-    Form1.SwapCounter := 0;
     boardView.DrawBoard;
     sw := TStopwatch.StartNew;
     BubbleSort(board, boardView);
-    enlapsedTime := sw.Elapsed;
-
-    sResult := TSortResults.Create;
-    try
-      with sResult do
-      begin
-        Name := 'BubbleSort';
-        DataSize := itemCount;
-        SwapCounter := Form1.SwapCounter;
-        ElapsedTime := enlapsedTime;
-      end;
-      vResult := TSortResultsView.CreateAndInit(paintBox, sResult);
-      vResult.DrawResults;
-    finally
-      sResult.Free;
-    end;
+    sResult.ElapsedTime := sw.Elapsed;
+    sResult.SwapCounter := FSwapCounter;
+    vResult := TSortResultsView.CreateAndInit(paintBox, sResult);
+    vResult.DrawResults;
   finally
     board.Free;
-    //exc
+    sResult.Free;
   end;
 end;
 
@@ -97,7 +92,7 @@ begin
         ABoardView.DrawItem(j);
         ABoardView.DrawItem(j + 1);
         Application.ProcessMessages;
-        inc(Form1.SwapCounter);
+        inc(FSwapCounter);
         WaitMilisecond(4.5);
 
         if not (Form1.EnableSorting) then
