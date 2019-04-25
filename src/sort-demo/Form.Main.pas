@@ -36,6 +36,9 @@ type
     procedure BubbleSort(var data: TArray<Integer>);
   end;
 
+  const
+    MaxValue = 100;
+
 var
   Form1: TForm1;
 
