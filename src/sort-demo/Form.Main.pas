@@ -47,9 +47,6 @@ uses
   System.Diagnostics, System.Math, Colors.Hsl, Action.StartBubble,
   Action.StartInsertion, Action.StartQuick;
 
-const
-  MaxValue = 100;
-
 procedure TForm1.Button2Click(Sender: TObject);
 var
   data: TArray<Integer>;
@@ -221,9 +218,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  TStartBubbleAction.CreateAndInit(Button1,'Bubble Sort');
-  TStartQuickAction.CreateAndInit(Button2,'Quick Sort');
-  TStartInsertionAction.CreateAndInit(Button3,'Insertion Sort');
+  TStartBubbleAction.CreateAndInit(Button1, PaintBox1, 'Bubble Sort');
+  TStartQuickAction.CreateAndInit(Button2, PaintBox2, 'Quick Sort');
+//  TStartInsertionAction.CreateAndInit(Button3, PaintBox3, 'Insertion Sort');
 end;
 
 procedure TForm1.GenerateData(var data: TArray<Integer>; items: Integer);

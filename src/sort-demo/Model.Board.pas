@@ -5,12 +5,15 @@ interface
 type
   TBoard = class // (TObject / TComponent)
   private
-    data: TArray<Integer>;
+    FData: TArray<Integer>;
     FCount: integer;
   public
     procedure GenerateData (items: Integer);
     procedure Swap (i,j: Integer);
     property Count: Integer read FCount write FCount;
+
+    const
+      MaxValue = 100;
   end;
 
 implementation
@@ -18,10 +21,14 @@ implementation
 uses Action.StartQuick;
 
 procedure TBoard.GenerateData(items: Integer);
+var
+  i: Integer;
 begin
-
+  randomize;
+  SetLength(FData, items);
+  for i := 0 to Length(FData) - 1 do
+    FData[i] := random(MaxValue) + 1;
 end;
-
 procedure TBoard.Swap(i, j: Integer);
 begin
 

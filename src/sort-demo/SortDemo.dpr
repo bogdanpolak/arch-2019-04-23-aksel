@@ -11,7 +11,8 @@ uses
   Action.StartBubble in 'Action.StartBubble.pas',
   Action.StartQuick in 'Action.StartQuick.pas',
   Action.StartInsertion in 'Action.StartInsertion.pas',
-  Action.Sort in 'Action.Sort.pas';
+  Action.Sort in 'Action.Sort.pas',
+  Controller.Board in 'Controller.Board.pas';
 
 {$R *.res}
 

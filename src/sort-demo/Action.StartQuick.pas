@@ -6,6 +6,7 @@ uses
   Vcl.ActnList,
   Action.Sort;
 
+
 type
   TStartQuickAction = class (TSortAction)
   public
@@ -24,14 +25,16 @@ end;
 procedure TStartQuickAction.DoWork;
 var
   data: TArray<Integer>;
-  PaintBox: TPaintBox;
-  ItemCount: Integer;
+  itemsCount: Integer;
   sw: TStopwatch;
   EnlapsedTime: TTimeSpan;
+  enableSorting: Boolean;
 begin
-  PaintBox := Form1.PaintBox2;
-  Form1.PrepareSortDemo(PaintBox, data);
-  ItemCount := CountVisibleItems(paintbox);
+//  PaintBox := Form1.PaintBox2;
+//  Form1.PrepareSortDemo(PaintBox, data);
+  enableSorting := True;
+  itemsCount := FController.GetItemsCount;// CountVisibleItems(paintbox);
+  data := FController.GenerateData;
   Form1.GenerateData(data, ItemCount);
   Form1.SwapCounter := 0;
   Form1.DrawBoard(PaintBox, data);
