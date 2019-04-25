@@ -4,25 +4,16 @@ interface
 
 uses
   Vcl.ExtCtrls, System.Diagnostics, Model.Board, View.Board, View.SortResults,
-  Model.SortResults;
+  Model.SortResults, Controler.Basic;
 
 type
 
-  TControlerBubbleSort = class
+  TControlerBubbleSort = class(TControlerBasicSort)
   private
-    FPaintBox: TPaintBox;
-    FStopwatch: TStopwatch;
-    FBoard: TBoard;
-    FBoardView: IBoardView;
-    FSResult: TSortResults;
-    FSResultView: ISortResultsView;
-    FSwapCounter: Integer;
     procedure BubbleSort;
-    procedure WaitMilisecond(timeMs: double);
   public
-    constructor CreateAndInit(APaintBox: TPaintBox);
-    destructor Destroy; override;
-    procedure DoSort;
+    constructor CreateAndInit(APaintBox: TPaintBox); override;
+    procedure DoSort; override;
   end;
 
 implementation
@@ -34,31 +25,8 @@ uses
 
 constructor TControlerBubbleSort.CreateAndInit(APaintBox: TPaintBox);
 begin
-  inherited Create;
-  FPaintBox := APaintBox;
-  FBoard := TBoard.Create;
-  FBoardView := TBoardView.CreateAndInit(FPaintBox, FBoard);
-  FSResult := TSortResults.Create;
-  FSResult.Name := 'BubbleSort';
-  FSResultView := TSortResultsView.CreateAndInit(FPaintBox, FSResult);
-end;
-
-destructor TControlerBubbleSort.Destroy;
-begin
-  FBoard.Free;
-  FSResult.Free;
   inherited;
-end;
-
-procedure TControlerBubbleSort.WaitMilisecond(timeMs: double);
-var
-  startTime64, endTime64, frequency64: Int64;
-begin
-  QueryPerformanceFrequency(frequency64);
-  QueryPerformanceCounter(startTime64);
-  QueryPerformanceCounter(endTime64);
-  while ((endTime64 - startTime64) / frequency64 * 1000 < timeMs) do
-    QueryPerformanceCounter(endTime64);
+  FSResult.Name := 'BubbleSort';
 end;
 
 procedure TControlerBubbleSort.BubbleSort;
