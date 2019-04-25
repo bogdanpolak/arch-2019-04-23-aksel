@@ -18,7 +18,7 @@ type
 
 implementation
 
-uses Action.StartQuick, View.Board;
+uses Action.StartQuick, View.Board, System.SysUtils;
 
 procedure TBoard.GenerateData(AItems: integer);
 var
@@ -37,6 +37,8 @@ begin
   v := FData[AIdx1];
   FData[AIdx1] := FData[AIdx2];
   FData[AIdx2] := v;
+  Inc(FCount);
+  Sleep(5);
 end;
 
 end.
