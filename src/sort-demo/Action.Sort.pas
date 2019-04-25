@@ -6,11 +6,11 @@ uses
   System.Classes, Vcl.ActnList, Vcl.StdCtrls;
 
 type
-  TSortAction = class (TAction)
+  TSortAction = class(TAction)
   protected
-    procedure OnActionExecute(Sender: TObject);
+    procedure OnActionExecute(ASender: TObject);
   public
-    constructor CreateAndInit (Button:TButton; const Caption: String);
+    constructor CreateAndInit(AButton: TButton; const ACaption: String);
     procedure DoWork; virtual; abstract;
   end;
 
@@ -18,15 +18,15 @@ implementation
 
 { TStartBubbleAction }
 
-constructor TSortAction.CreateAndInit(Button:TButton; const Caption: String);
+constructor TSortAction.CreateAndInit(AButton: TButton; const ACaption: String);
 begin
-  inherited Create(Button);
-  Self.Caption := Caption;
-  Button.Action := Self;
+  inherited Create(AButton);
+  Self.Caption := ACaption;
+  AButton.Action := Self;
   Self.OnExecute := OnActionExecute
 end;
 
-procedure TSortAction.OnActionExecute (Sender: TObject);
+procedure TSortAction.OnActionExecute(ASender: TObject);
 begin
   DoWork;
 end;
