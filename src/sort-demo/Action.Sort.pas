@@ -26,7 +26,7 @@ begin
   Self.Caption := Caption;
   Button.Action := Self;
   Self.OnExecute := OnActionExecute;
-  FController := TBoardController.CreateAndInit(TBoard.Create, TBoardView.CreateAndInit(PaintBox));
+  FController := TBoardController.CreateAndInit(Self, TBoard.Create, TBoardView.CreateAndInit(PaintBox));
 end;
 
 procedure TSortAction.OnActionExecute (Sender: TObject);
