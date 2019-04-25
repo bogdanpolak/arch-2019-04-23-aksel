@@ -4,13 +4,14 @@ interface
 
 uses
   Vcl.ExtCtrls, System.Diagnostics, Model.Board, View.Board, View.SortResults,
-  Model.SortResults, Controler.Basic;
+  Model.SortResults, Controler.Basic, System.Classes;
 
 type
 
   TControlerBubbleSort = class(TControlerBasicSort)
   private
     procedure BubbleSort;
+    procedure DoAfterSort;
   public
     constructor CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox); override;
     procedure DoSort; override;
@@ -19,7 +20,7 @@ type
 implementation
 
 uses
-  Winapi.Windows, Vcl.Forms;
+  Winapi.Windows, Vcl.Forms, Controler.Thread;
 
 { TControlerBubbleSort }
 
@@ -39,31 +40,42 @@ begin
       if FBoard.Data[j] > FBoard.Data[j + 1] then
       begin
         FBoard.Swap(j, j + 1);
-        FBoardView.DrawItem(j);
-        FBoardView.DrawItem(j + 1);
-        Application.ProcessMessages;
+        TControlerThread.Synchronize(FControlerThread,
+          procedure
+          begin
+            FBoardView.DrawItem(j);
+            FBoardView.DrawItem(j + 1);
+          end);
         inc(FSwapCounter);
         WaitMilisecond(4.5);
-//        if not (Form1.EnableSorting) then
-//          break;
+        if FControlerThread.IsTerminated then
+          Exit;
       end;
 end;
 
 procedure TControlerBubbleSort.DoSort;
 var
   itemCount: Integer;
-  sw: TStopwatch;
 begin
   itemCount := FBoardView.CountVisibleItems;
   FSResult.DataSize := itemCount;
   FSwapCounter := 0;
+
   FBoard.GenerateData(itemCount);
   FBoardView.DrawBoard;
-  sw := TStopwatch.StartNew;
-  BubbleSort;
-  FSResult.ElapsedTime := sw.Elapsed;
+  FSWatch := TStopwatch.StartNew;
+  FControlerThread := TControlerThread.CreateAndInit(BubbleSort, DoAfterSort);
+end;
+
+procedure TControlerBubbleSort.DoAfterSort;
+begin
+  FSResult.ElapsedTime := FSWatch.Elapsed;
   FSResult.SwapCounter := FSwapCounter;
-  FSResultView.DrawResults;
+  TControlerThread.Synchronize(FControlerThread,
+    procedure
+    begin
+      FSResultView.DrawResults;
+    end);
 end;
 
 end.

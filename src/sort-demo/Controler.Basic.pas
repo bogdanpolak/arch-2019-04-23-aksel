@@ -4,7 +4,7 @@ interface
 
 uses
   Vcl.ExtCtrls, Model.Board, View.Board, View.SortResults,
-  Model.SortResults, System.Diagnostics, System.Classes;
+  Model.SortResults, System.Diagnostics, System.Classes, Controler.Thread;
 
 type
   TControlerBasicSort = class(TComponent)
@@ -17,6 +17,8 @@ type
     FSResult: TSortResults;
     FSResultView: ISortResultsView;
     FSwapCounter: Integer;
+    FSWatch: TStopwatch;
+    FControlerThread: TControlerThread;
     procedure WaitMilisecond(ATimeMs: Double);
   public
     constructor CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox); virtual;
@@ -46,6 +48,8 @@ destructor TControlerBasicSort.Destroy;
 begin
   FBoard.Free;
   FSResult.Free;
+  if FControlerThread.IsRunning then
+    FControlerThread.Terminate;
   inherited;
 end;
 

@@ -12,7 +12,9 @@ uses
   Action.StartQuick in 'Action.StartQuick.pas',
   Action.StartInsertion in 'Action.StartInsertion.pas',
   Action.Sort in 'Action.Sort.pas',
-  Controler.BubbleSort in 'Controler.BubbleSort.pas';
+  Controler.BubbleSort in 'Controler.BubbleSort.pas',
+  Controler.Basic in 'Controler.Basic.pas',
+  Controler.Thread in 'Controler.Thread.pas';
 
 {$R *.res}
 
