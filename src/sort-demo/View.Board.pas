@@ -14,13 +14,14 @@ type
 
   end;
 
+const
+  MaxValue = 100;
+
 implementation
 
 uses
   Vcl.Graphics, Colors.Hsl, Winapi.Windows, System.Classes;
 
-const
-  MaxValue = 100;
 
 function GetColor(value: Integer): TColor;
 var
