@@ -10,7 +10,8 @@ uses
   View.SortResults in 'View.SortResults.pas',
   Action.StartBubble in 'Action.StartBubble.pas',
   Action.StartQuick in 'Action.StartQuick.pas',
-  Action.StartInsertion in 'Action.StartInsertion.pas';
+  Action.StartInsertion in 'Action.StartInsertion.pas',
+  Action.Sort in 'Action.Sort.pas';
 
 {$R *.res}
 

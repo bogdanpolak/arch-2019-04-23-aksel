@@ -7,7 +7,7 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Generics.Collections,
   System.TimeSpan,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  Vcl.StdCtrls, Vcl.ActnList;
+  Vcl.StdCtrls;
 
 type
   TForm1 = class(TForm)
@@ -17,21 +17,20 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button2Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
     EnableSorting: Boolean;
-    SwapCounter: Integer;
     procedure swap(i, j: Integer; var data: TArray<Integer>);
+  public
+    SwapCounter: Integer;
+    procedure PrepareSortDemo(paintbox: TPaintBox; var data: TArray<Integer>);
     procedure DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
     procedure DrawItem(paintbox: TPaintBox; index, value: Integer);
     procedure GenerateData(var data: TArray<Integer>; items: Integer);
     procedure DrawResults(paintbox: TPaintBox; const name: string;
       dataSize: Integer; enlapsed: TTimeSpan; swaps: Integer);
-    procedure BindActionToButton<T: TAction>(btn: TButton);
-  public
-    procedure PrepareSortDemo(paintbox: TPaintBox; var data: TArray<Integer>);
     procedure QuickSort(var data: TArray<Integer>);
     procedure InsertionSort(var data: TArray<Integer>);
     procedure BubbleSort(var data: TArray<Integer>);
@@ -50,11 +49,6 @@ uses
 
 const
   MaxValue = 100;
-
-procedure TForm1.BindActionToButton<T>(btn: TButton);
-begin
-  btn.Action :=  T.Create(btn);
-end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 var
@@ -96,9 +90,7 @@ procedure TForm1.BubbleSort(var data: TArray<Integer>);
 var
   i: Integer;
   j: Integer;
-  sw: TStopwatch;
 begin
-  sw := TStopwatch.StartNew;
   for i := 0 to Length(data) - 1 do
     for j := 0 to Length(data) - 2 do
       if data[j] > data[j + 1] then
@@ -107,18 +99,15 @@ begin
         if not(EnableSorting) then
           break;
       end;
-  DrawResults(SwapPaintBox, 'BubleSort', Length(data), sw.Elapsed, SwapCounter);
 end;
 
 procedure TForm1.InsertionSort(var data: TArray<Integer>);
 var
   i: Integer;
   j: Integer;
-  sw: TStopwatch;
   mini: Integer;
   minv: Integer;
 begin
-  sw := TStopwatch.StartNew;
   for i := 0 to Length(data) - 1 do
   begin
     mini := i;
@@ -136,7 +125,6 @@ begin
     if not(EnableSorting) then
       break;
   end;
-  DrawResults(SwapPaintBox, 'InsertionSort', Length(data), sw.Elapsed, SwapCounter);
 end;
 
 procedure TForm1.QuickSort(var data: TArray<Integer>);
@@ -170,12 +158,8 @@ procedure TForm1.QuickSort(var data: TArray<Integer>);
     end;
   end;
 
-var
-  sw: TStopwatch;
 begin
-  sw := TStopwatch.StartNew;
   qsort(0, Length(data) - 1);
-  DrawResults(SwapPaintBox, 'QuickSort', Length(data), sw.Elapsed, SwapCounter);
 end;
 
 function GetColor(value: Integer): TColor;
@@ -237,9 +221,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  BindActionToButton <TStartBubbleAction> (Button1);
-  BindActionToButton <TStartQuickAction> (Button2);
-  BindActionToButton <TStartInsertionAction> (Button3);
+  TStartBubbleAction.CreateAndInit(Button1,'Bubble Sort');
+  TStartQuickAction.CreateAndInit(Button2,'Quick Sort');
+  TStartInsertionAction.CreateAndInit(Button3,'Insertion Sort');
 end;
 
 procedure TForm1.GenerateData(var data: TArray<Integer>; items: Integer);
@@ -257,12 +241,8 @@ procedure TForm1.PrepareSortDemo(paintbox: TPaintBox;
 var
   items: Integer;
 begin
-  items := round(paintbox.Width / 6) - 1;
-  GenerateData(data, items);
   EnableSorting := true;
-  SwapCounter := 0;
   SwapPaintBox := paintbox;
-  DrawBoard(paintbox, data);
 end;
 
 end.
