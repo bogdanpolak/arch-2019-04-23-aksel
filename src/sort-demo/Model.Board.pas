@@ -4,14 +4,12 @@ interface
 
 type
   TBoard = class // (TObject / TComponent)
-  private
-    FData: TArray<Integer>;
   public
+    FData: TArray<Integer>;
     procedure GenerateData (items: Integer);
     procedure Swap (i,j: Integer);
-
-    const
-      MaxValue = 100;
+  const
+    MaxValue = 100;
   end;
 
 implementation

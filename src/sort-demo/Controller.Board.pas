@@ -28,7 +28,8 @@ end;
 
 function TBoardController.GenerateData: TArray<Integer>;
 begin
-  Result := FModel.GenerateData(GetItemsCount);
+  FModel.GenerateData(GetItemsCount);
+  Result := FModel.FData;
 end;
 
 function TBoardController.GetItemsCount: Integer;
