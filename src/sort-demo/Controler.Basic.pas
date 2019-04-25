@@ -4,10 +4,10 @@ interface
 
 uses
   Vcl.ExtCtrls, Model.Board, View.Board, View.SortResults,
-  Model.SortResults, System.Diagnostics;
+  Model.SortResults, System.Diagnostics, System.Classes;
 
 type
-  TControlerBasicSort = class
+  TControlerBasicSort = class(TComponent)
   private
   protected
     FPaintBox: TPaintBox;
@@ -19,7 +19,7 @@ type
     FSwapCounter: Integer;
     procedure WaitMilisecond(ATimeMs: Double);
   public
-    constructor CreateAndInit(APaintBox: TPaintBox); virtual;
+    constructor CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox); virtual;
     destructor Destroy; override;
 
     procedure DoSort; virtual; abstract;
@@ -32,9 +32,9 @@ uses
 
 { TControlerBasicSort }
 
-constructor TControlerBasicSort.CreateAndInit(APaintBox: TPaintBox);
+constructor TControlerBasicSort.CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox);
 begin
-  inherited Create;
+  inherited Create(AOwner);
   FPaintBox := APaintBox;
   FBoard := TBoard.Create;
   FBoardView := TBoardView.CreateAndInit(FPaintBox, FBoard);

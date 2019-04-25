@@ -12,7 +12,7 @@ type
   private
     procedure BubbleSort;
   public
-    constructor CreateAndInit(APaintBox: TPaintBox); override;
+    constructor CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox); override;
     procedure DoSort; override;
   end;
 
@@ -23,7 +23,7 @@ uses
 
 { TControlerBubbleSort }
 
-constructor TControlerBubbleSort.CreateAndInit(APaintBox: TPaintBox);
+constructor TControlerBubbleSort.CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox);
 begin
   inherited;
   FSResult.Name := 'BubbleSort';

@@ -20,12 +20,8 @@ procedure TStartBubbleAction.DoWork;
 var
   cBubbleSort: TControlerBubbleSort;
 begin
-  cBubbleSort := TControlerBubbleSort.CreateAndInit(FPaintBox);
-  try
-    cBubbleSort.DoSort;
-  finally
-    cBubbleSort.Free;
-  end;
+  cBubbleSort := TControlerBubbleSort.CreateAndInit(Owner, FPaintBox);
+  cBubbleSort.DoSort;
 end;
 
 end.
