@@ -8,14 +8,13 @@ uses
 type
   TBoardView = class
   private
+    FMaxValue: UInt8;
   public
     procedure DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
     procedure DrawItem(paintbox: TPaintBox; index, value: Integer);
 
+    property MaxValue: UInt8 read FMaxValue write FMaxValue;
   end;
-
-const
-  MaxValue = 100;
 
 implementation
 
@@ -23,7 +22,7 @@ uses
   Vcl.Graphics, Colors.Hsl, Winapi.Windows, System.Classes;
 
 
-function GetColor(value: Integer): TColor;
+function GetColor(value: Integer; MaxValue: UInt8): TColor;
 var
   Hue: Integer;
   col: TRgbColor;
@@ -46,7 +45,7 @@ begin
   c.Pen.Style := psClear;
   c.Brush.Color := paintbox.Color;
   c.Rectangle(x, 0, x + 5, maxhg - (j) + 1);
-  c.Brush.Color := GetColor(value);
+  c.Brush.Color := GetColor(value, MaxValue);
   c.Rectangle(x, maxhg - (j), x + 5, maxhg);
 end;
 
