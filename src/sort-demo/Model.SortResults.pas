@@ -3,7 +3,7 @@ unit Model.SortResults;
 interface
 
 uses
-  System.TimeSpan, System.Diagnostics;
+  System.TimeSpan;
 
 type
   TSortResults = class
@@ -11,32 +11,15 @@ type
     FSwapCounter: Integer;
     FName: string;
     FDataSize: Integer;
-    FStopWatch: TStopwatch;
-    FElapsed: TTimeSpan;
+    FElapsedTime: TTimeSpan;
   public
-    constructor Create(const AName: string; ADataSize: Integer);
-    procedure StartCountingTime;
-    procedure StopCountingTime;
-
+    property DataSize: Integer read FDataSize write FDataSize;
+    property Name: string read FName write FName;
     property SwapCounter: Integer read FSwapCounter write FSwapCounter;
+    property ElapsedTime: TTimeSpan read FElapsedTime write FElapsedTime;
   end;
 
 implementation
 
-constructor TSortResults.Create(const AName: string; ADataSize: Integer);
-begin
-  FName := AName;
-  FDataSize := ADataSize;
-end;
-
-procedure TSortResults.StartCountingTime;
-begin
-  FStopWatch := TStopWatch.StartNew;
-end;
-
-procedure TSortResults.StopCountingTime;
-begin
-  FElapsed := FStopWatch.Elapsed;
-end;
 
 end.

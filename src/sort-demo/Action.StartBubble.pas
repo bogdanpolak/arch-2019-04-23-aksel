@@ -18,7 +18,7 @@ type
 implementation
 
 uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan, Vcl.Forms,
-  Winapi.Windows;
+  Winapi.Windows, Model.SortResults, View.SortResults;
 
 function CountVisibleItems (paintbox: TPaintBox): integer;
 begin
@@ -34,6 +34,8 @@ var
   enlapsedTime: TTimeSpan;
   board: TBoard;
   boardView: IBoardView;
+  sResult: TSortResults;
+  vResult: TSortResultsView;
 begin
   paintBox := Form1.PaintBox1;
   Form1.PrepareSortDemo(paintBox, data);
@@ -48,7 +50,21 @@ begin
     sw := TStopwatch.StartNew;
     BubbleSort(board, boardView);
     enlapsedTime := sw.Elapsed;
-    Form1.DrawResults(paintBox, 'BubbleSort', itemCount, enlapsedTime, Form1.SwapCounter);
+
+    sResult := TSortResults.Create;
+    try
+      with sResult do
+      begin
+        Name := 'BubbleSort';
+        DataSize := itemCount;
+        SwapCounter := Form1.SwapCounter;
+        ElapsedTime := enlapsedTime;
+      end;
+      vResult := TSortResultsView.CreateAndInit(paintBox, sResult);
+      vResult.DrawResults;
+    finally
+      sResult.Free;
+    end;
   finally
     board.Free;
     //exc
