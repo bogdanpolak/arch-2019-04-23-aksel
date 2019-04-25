@@ -6,7 +6,7 @@ uses
   System.TimeSpan;
 
 type
-  TSortResults = class
+  TSortResults = class { todo: guard na property }
   private
     FSwapCounter: Integer;
     FName: string;

@@ -10,6 +10,7 @@ type
     ['{8734291B-DA8D-4569-8AEC-A9741DE778B7}']
     procedure DrawBoard;
     procedure DrawItem(AIndex: Integer);
+    function CountVisibleItems: Integer;
   end;
 
   TBoardView = class(TInterfacedObject, IBoardView)
@@ -21,6 +22,7 @@ type
     constructor CreateAndInit(APaintBox: TPaintBox; ABoard: TBoard);
     procedure DrawBoard;
     procedure DrawItem(AIndex: Integer);
+    function CountVisibleItems: Integer;
   end;
 
 implementation
@@ -48,6 +50,11 @@ begin
   FPaintBox.Canvas.FillRect(Rect(0, 0, FPaintBox.Width, FPaintBox.Height));
   for i := 0 to FBoard.Count - 1 do
     DrawItem(i);
+end;
+
+function TBoardView.CountVisibleItems: Integer;
+begin
+  Result := round(FPaintBox.Width / 6) - 1;
 end;
 
 procedure TBoardView.DrawItem(AIndex: Integer);
