@@ -10,7 +10,7 @@ type
   protected
     procedure OnActionExecute(Sender: TObject);
   public
-    constructor CreateAndInit (Button:TButton; const Caption: String);
+    constructor CreateAndInit (Button:TButton; const Caption: String); virtual;
     procedure DoWork; virtual; abstract;
   end;
 

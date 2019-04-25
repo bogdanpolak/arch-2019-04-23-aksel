@@ -39,6 +39,9 @@ type
 var
   Form1: TForm1;
 
+const
+  MaxValue = 100;
+
 implementation
 
 {$R *.dfm}
@@ -46,9 +49,6 @@ implementation
 uses
   System.Diagnostics, System.Math, Colors.Hsl, Action.StartBubble,
   Action.StartInsertion, Action.StartQuick;
-
-const
-  MaxValue = 100;
 
 procedure TForm1.Button2Click(Sender: TObject);
 var
