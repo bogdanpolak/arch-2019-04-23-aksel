@@ -19,7 +19,6 @@ type
     Button3: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure Button2Click(Sender: TObject);
   private
     EnableSorting: Boolean;
     procedure swap(i, j: Integer; var data: TArray<Integer>);
@@ -49,14 +48,6 @@ implementation
 uses
   System.Diagnostics, System.Math, Colors.Hsl, Action.StartBubble,
   Action.StartInsertion, Action.StartQuick;
-
-procedure TForm1.Button2Click(Sender: TObject);
-var
-  data: TArray<Integer>;
-begin
-  PrepareSortDemo(PaintBox2, data);
-  QuickSort(data);
-end;
 
 var
   SwapPaintBox: TPaintBox;

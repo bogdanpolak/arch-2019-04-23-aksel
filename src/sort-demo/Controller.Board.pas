@@ -15,12 +15,14 @@ type
     function GetItemsCount: Integer;
     procedure DoQuickSort(var data: TArray<Integer>);
     procedure DoBubbleSort(var data: TArray<Integer>);
+    procedure DoInsertionSort(var data: TArray<Integer>);
     procedure Swap(i, j: Integer; var data: TArray<Integer>);
     procedure WaitMilisecond(timeMs: double);
   public
     constructor CreateAndInit(AOwner: TComponent; AModel: TBoard; AView: TBoardView);
     procedure QuickSort;
     procedure BubbleSort;
+    procedure InsertionSort;
     property EnableSorting: Boolean read FEnableSorting write FEnableSorting;
   const
     MaxValue = 100;
@@ -93,6 +95,32 @@ begin
       end;
 end;
 
+procedure TBoardController.DoInsertionSort(var data: TArray<Integer>);
+var
+  i: Integer;
+  j: Integer;
+  mini: Integer;
+  minv: Integer;
+begin
+  for i := 0 to Length(data) - 1 do
+  begin
+    mini := i;
+    minv := data[i];
+    for j := i + 1 to Length(data) - 1 do
+    begin
+      if data[j] < minv then
+      begin
+        mini := j;
+        minv := data[j];
+      end;
+    end;
+    if mini <> i then
+      swap(i, mini, data);
+    if not(EnableSorting) then
+      break;
+  end;
+end;
+
 procedure TBoardController.DoQuickSort(var data: TArray<Integer>);
   procedure qsort(idx1, idx2: Integer);
   var
@@ -131,6 +159,23 @@ end;
 function TBoardController.GetItemsCount: Integer;
 begin
   Result := FView.ItemsCount;
+end;
+
+procedure TBoardController.InsertionSort;
+var
+  itemsCount: Integer;
+  sw: TStopwatch;
+  elapsedTime: TTimeSpan;
+begin
+  EnableSorting := True;
+  FSwapCounter := 0;
+  itemsCount := GetItemsCount;
+  FModel.GenerateData(itemsCount);
+  FView.DrawBoard(FModel.FData);
+  sw := TStopwatch.StartNew;
+  DoInsertionSort(FModel.FData);
+  elapsedTime := sw.Elapsed;
+  FView.DrawResults('InsertionSort', itemsCount, elapsedTime, FSwapCounter);
 end;
 
 procedure TBoardController.QuickSort;
