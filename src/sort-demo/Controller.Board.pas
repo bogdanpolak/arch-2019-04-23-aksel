@@ -12,6 +12,7 @@ type
     FView: TBoardView;
   public
     constructor CreateAndInit(AModel: TBoard; AView: TBoardView);
+    function GenerateData: TArray<Integer>;
     function GetItemsCount: Integer;
   end;
 
@@ -23,6 +24,11 @@ constructor TBoardController.CreateAndInit(AModel: TBoard; AView: TBoardView);
 begin
   FModel := AModel;
   FView := AView;
+end;
+
+function TBoardController.GenerateData: TArray<Integer>;
+begin
+  Result := FModel.GenerateData(GetItemsCount);
 end;
 
 function TBoardController.GetItemsCount: Integer;
