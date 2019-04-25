@@ -7,8 +7,8 @@ uses
   Model.SortResults, System.Diagnostics;
 
 type
-
   TControlerBasicSort = class
+  private
   protected
     FPaintBox: TPaintBox;
     FStopwatch: TStopwatch;
@@ -17,7 +17,7 @@ type
     FSResult: TSortResults;
     FSResultView: ISortResultsView;
     FSwapCounter: Integer;
-    procedure WaitMilisecond(ATimeMs: double);
+    procedure WaitMilisecond(ATimeMs: Double);
   public
     constructor CreateAndInit(APaintBox: TPaintBox); virtual;
     destructor Destroy; override;
@@ -49,7 +49,7 @@ begin
   inherited;
 end;
 
-procedure TControlerBasicSort.WaitMilisecond(ATimeMs: double);
+procedure TControlerBasicSort.WaitMilisecond(ATimeMs: Double);
 var
   startTime64, endTime64, frequency64: Int64;
 begin

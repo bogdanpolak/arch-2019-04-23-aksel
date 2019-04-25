@@ -3,7 +3,6 @@ unit Action.StartBubble;
 interface
 
 uses
-  Vcl.ActnList, Vcl.StdCtrls,
   Action.Sort;
 
 type
@@ -15,13 +14,13 @@ type
 
 implementation
 
-uses Form.Main, Controler.BubbleSort;
+uses Controler.BubbleSort;
 
 procedure TStartBubbleAction.DoWork;
 var
   cBubbleSort: TControlerBubbleSort;
 begin
-  cBubbleSort := TControlerBubbleSort.CreateAndInit(Form1.PaintBox1);
+  cBubbleSort := TControlerBubbleSort.CreateAndInit(FPaintBox);
   try
     cBubbleSort.DoSort;
   finally
