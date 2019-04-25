@@ -18,8 +18,8 @@ type
 
 implementation
 
-uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan, Vcl.Forms,
-  Winapi.Windows, Model.SortResults, View.SortResults;
+uses Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan, Vcl.Forms,
+  Winapi.Windows, Model.SortResults, View.SortResults, Form.Main;
 
 function CountVisibleItems (paintbox: TPaintBox): integer;
 begin
@@ -28,18 +28,15 @@ end;
 
 procedure TStartBubbleAction.DoWork;
 var
-  data: TArray<Integer>;
   paintBox: TPaintBox;
   itemCount: Integer;
   sw: TStopwatch;
-  enlapsedTime: TTimeSpan;
   board: TBoard;
   boardView: IBoardView;
   sResult: TSortResults;
   vResult: TSortResultsView;
 begin
-  paintBox := Form1.PaintBox1;
-  Form1.PrepareSortDemo(paintBox, data);
+  paintBox := Form1.PaintBox1;  //
   itemCount := CountVisibleItems(paintbox);
   board := TBoard.Create;
   sResult := TSortResults.Create;
@@ -51,7 +48,6 @@ begin
   try
     FSwapCounter := 0;
     board.GenerateData(itemCount);
-    data := board.Data;
     boardView := TBoardView.CreateAndInit(paintBox, board);
     boardView.DrawBoard;
     sw := TStopwatch.StartNew;
@@ -87,16 +83,13 @@ begin
       if ABoard.Data[j] > ABoard.Data[j + 1] then
       begin
         ABoard.Swap(j, j + 1);
-
-         //
         ABoardView.DrawItem(j);
         ABoardView.DrawItem(j + 1);
         Application.ProcessMessages;
         inc(FSwapCounter);
         WaitMilisecond(4.5);
-
-        if not (Form1.EnableSorting) then
-          break;
+//        if not (Form1.EnableSorting) then
+//          break;
       end;
 end;
 
