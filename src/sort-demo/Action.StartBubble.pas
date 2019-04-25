@@ -14,13 +14,16 @@ type
 
 implementation
 
-uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan;
+uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan,
+  System.Classes;
 
 procedure TStartBubbleAction.DoWork;
 begin
   TThread.CreateAnonymousThread(procedure
   begin
+    Enabled := False;
     FController.BubbleSort;
+    Enabled := True;
   end).Start;
 end;
 

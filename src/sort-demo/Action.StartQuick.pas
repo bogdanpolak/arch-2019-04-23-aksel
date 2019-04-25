@@ -23,7 +23,9 @@ begin
   TThread.CreateAnonymousThread(
   procedure
   begin
+    Enabled := False;
     FController.QuickSort;
+    Enabled := True;
   end).Start;
 end;
 

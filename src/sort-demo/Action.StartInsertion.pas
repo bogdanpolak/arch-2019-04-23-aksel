@@ -21,8 +21,10 @@ procedure TStartInsertionAction.DoWork;
 begin
   TThread.CreateAnonymousThread(procedure
   begin
+    Enabled := False;
     FController.InsertionSort;
-  end);
+    Enabled := True;
+  end).Start;
 end;
 
 end.

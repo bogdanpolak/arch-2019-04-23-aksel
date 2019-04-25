@@ -17,6 +17,7 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    PaintBox3: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
@@ -214,7 +215,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   TStartBubbleAction.CreateAndInit(Button1, PaintBox1, 'Bubble Sort');
   TStartQuickAction.CreateAndInit(Button2, PaintBox2, 'Quick Sort');
-//  TStartInsertionAction.CreateAndInit(Button3, PaintBox3, 'Insertion Sort');
+  TStartInsertionAction.CreateAndInit(Button3, PaintBox3, 'Insertion Sort');
 end;
 
 procedure TForm1.GenerateData(var data: TArray<Integer>; items: Integer);

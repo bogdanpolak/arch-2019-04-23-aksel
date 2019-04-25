@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 502
-  ClientWidth = 635
+  ClientHeight = 650
+  ClientWidth = 638
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,29 +19,43 @@ object Form1: TForm1
     AlignWithMargins = True
     Left = 3
     Top = 58
-    Width = 629
+    Width = 632
     Height = 175
     Align = alTop
     ExplicitLeft = -2
+    ExplicitWidth = 629
   end
   object PaintBox2: TPaintBox
     AlignWithMargins = True
     Left = 3
     Top = 239
-    Width = 629
+    Width = 632
     Height = 175
     Align = alTop
+    ExplicitWidth = 629
+  end
+  object PaintBox3: TPaintBox
+    AlignWithMargins = True
+    Left = 3
+    Top = 420
+    Width = 632
+    Height = 175
+    Align = alTop
+    ExplicitLeft = 6
+    ExplicitTop = 247
+    ExplicitWidth = 629
   end
   object GroupBox1: TGroupBox
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 629
+    Width = 632
     Height = 49
     Align = alTop
     Caption = 'GroupBox1'
     Padding.Bottom = 1
     TabOrder = 0
+    ExplicitWidth = 629
     object Button1: TButton
       AlignWithMargins = True
       Left = 5
