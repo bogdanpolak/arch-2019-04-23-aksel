@@ -5,9 +5,10 @@ interface
 type
   TBoard = class // (TObject / TComponent)
   private
-    FData: TArray<Integer>;
     FCount: integer;
   public
+  {TODO Property?}
+    FData: TArray<Integer>;
     procedure GenerateData (AItems: Integer);
     procedure Swap (AIdx1, AIdx2: Integer);
     property Count: Integer read FCount write FCount;
