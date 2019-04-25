@@ -2,11 +2,15 @@ unit Model.Board;
 
 interface
 
+uses
+  Vcl.ExtCtrls;
+
 type
   TBoard = class // (TObject / TComponent)
   private
     FCount: integer;
     FMaxValue: UInt8;
+    FPaintBox: TPaintBox;
   public
     { TODO Property? }
     FData: TArray<integer>;
@@ -14,6 +18,7 @@ type
     procedure Swap(AIdx1, AIdx2: integer);
     property Count: integer read FCount write FCount;
     property MaxValue: UInt8 read FMaxValue write FMaxValue;
+    property PaintBox: TPaintBox read FPaintBox write FPaintBox;
   end;
 
 implementation
@@ -38,7 +43,6 @@ begin
   FData[AIdx1] := FData[AIdx2];
   FData[AIdx2] := v;
   Inc(FCount);
-  Sleep(5);
 end;
 
 end.

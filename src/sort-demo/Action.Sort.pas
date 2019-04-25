@@ -11,6 +11,7 @@ type
     procedure OnActionExecute(ASender: TObject);
   public
     constructor CreateAndInit(AButton: TButton; const ACaption: String);
+    procedure InitVariables; virtual; abstract;
     procedure DoWork; virtual; abstract;
   end;
 
@@ -28,6 +29,7 @@ end;
 
 procedure TSortAction.OnActionExecute(ASender: TObject);
 begin
+  InitVariables;
   DoWork;
 end;
 
