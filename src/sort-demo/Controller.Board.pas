@@ -3,10 +3,10 @@ unit Controller.Board;
 interface
 
 uses
-  Model.Board, View.Board;
+  Model.Board, View.Board, System.Classes;
 
 type
-  TBoardController = class
+  TBoardController = class(TComponent)
   private
     FModel: TBoard;
     FView: TBoardView;
@@ -14,11 +14,13 @@ type
     FSwapCounter: Integer;
     function GetItemsCount: Integer;
     procedure DoQuickSort(var data: TArray<Integer>);
+    procedure DoBubbleSort(var data: TArray<Integer>);
     procedure Swap(i, j: Integer; var data: TArray<Integer>);
     procedure WaitMilisecond(timeMs: double);
   public
-    constructor CreateAndInit(AModel: TBoard; AView: TBoardView);
+    constructor CreateAndInit(AOwner: TComponent; AModel: TBoard; AView: TBoardView);
     procedure QuickSort;
+    procedure BubbleSort;
     property EnableSorting: Boolean read FEnableSorting write FEnableSorting;
   const
     MaxValue = 100;
@@ -31,8 +33,26 @@ uses
 
 { TBoardController }
 
-constructor TBoardController.CreateAndInit(AModel: TBoard; AView: TBoardView);
+procedure TBoardController.BubbleSort;
+var
+  itemsCount: Integer;
+  sw: TStopwatch;
+  elapsedTime: TTimeSpan;
 begin
+  EnableSorting := True;
+  FSwapCounter := 0;
+  itemsCount := GetItemsCount;
+  FModel.GenerateData(itemsCount);
+  FView.DrawBoard(FModel.FData);
+  sw := TStopwatch.StartNew;
+  DoBubbleSort(FModel.FData);
+  elapsedTime := sw.Elapsed;
+  FView.DrawResults('BubbleSort', itemsCount, elapsedTime, FSwapCounter);
+end;
+
+constructor TBoardController.CreateAndInit(AOwner: TComponent; AModel: TBoard; AView: TBoardView);
+begin
+  inherited Create(AOwner);
   FModel := AModel;
   FView := AView;
   FModel.MaxValue := MaxValue;
@@ -56,6 +76,21 @@ begin
   FView.Swap(i, j, FModel.FData);
   inc(FSwapCounter);
   WaitMilisecond(4.5);
+end;
+
+procedure TBoardController.DoBubbleSort(var data: TArray<Integer>);
+var
+  i: Integer;
+  j: Integer;
+begin
+  for i := 0 to Length(data) - 1 do
+    for j := 0 to Length(data) - 2 do
+      if data[j] > data[j + 1] then
+      begin
+        swap(j, j + 1, data);
+        if not(EnableSorting) then
+          break;
+      end;
 end;
 
 procedure TBoardController.DoQuickSort(var data: TArray<Integer>);
