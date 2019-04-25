@@ -21,10 +21,10 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button2Click(Sender: TObject);
   private
-    EnableSorting: Boolean;
     procedure swap(i, j: Integer; var data: TArray<Integer>);
   public
     SwapCounter: Integer;
+    EnableSorting: Boolean;
     procedure PrepareSortDemo(paintbox: TPaintBox; var data: TArray<Integer>);
     procedure DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
     procedure DrawItem(paintbox: TPaintBox; index, value: Integer);
