@@ -3,7 +3,8 @@ unit Controller.Board;
 interface
 
 uses
-  Model.Board, View.Board, System.Classes;
+  Model.Board, View.Board, System.Classes,
+  System.Diagnostics, System.TimeSpan, Winapi.Windows;
 
 type
   TBoardController = class(TComponent)
@@ -18,6 +19,9 @@ type
     procedure DoInsertionSort(var data: TArray<Integer>);
     procedure Swap(i, j: Integer; var data: TArray<Integer>);
     procedure WaitMilisecond(timeMs: double);
+    procedure DrawBoard;
+    procedure DrawResult(const ATitle: string; AItemsCount: Integer;
+      AElapsedTime: TTimeSpan);
   public
     constructor CreateAndInit(AOwner: TComponent; AModel: TBoard; AView: TBoardView);
     procedure QuickSort;
@@ -30,10 +34,16 @@ type
 
 implementation
 
-uses
-  System.Diagnostics, System.TimeSpan, Winapi.Windows;
-
 { TBoardController }
+
+procedure TBoardController.DrawBoard;
+begin
+  TThread.Synchronize(nil,
+  procedure
+  begin
+    FView.DrawBoard(FModel.FData);
+  end);
+end;
 
 procedure TBoardController.BubbleSort;
 var
@@ -45,11 +55,20 @@ begin
   FSwapCounter := 0;
   itemsCount := GetItemsCount;
   FModel.GenerateData(itemsCount);
-  FView.DrawBoard(FModel.FData);
+  DrawBoard;
   sw := TStopwatch.StartNew;
   DoBubbleSort(FModel.FData);
   elapsedTime := sw.Elapsed;
-  FView.DrawResults('BubbleSort', itemsCount, elapsedTime, FSwapCounter);
+  DrawResult('BubbleSort', itemsCount, elapsedTime);
+end;
+
+procedure TBoardController.DrawResult(const ATitle: string; AItemsCount: Integer; AElapsedTime: TTimeSpan);
+begin
+  TThread.Synchronize(nil,
+  procedure
+  begin
+    FView.DrawResults(ATitle, AItemsCount, AElapsedTime, FSwapCounter);
+  end);
 end;
 
 constructor TBoardController.CreateAndInit(AOwner: TComponent; AModel: TBoard; AView: TBoardView);
@@ -75,7 +94,11 @@ end;
 procedure TBoardController.Swap(i, j: Integer; var data: TArray<Integer>);
 begin
   FModel.Swap(i, j);
-  FView.Swap(i, j, FModel.FData);
+  TThread.Synchronize(nil,
+  procedure
+  begin
+    FView.Swap(i, j, FModel.FData);
+  end);
   inc(FSwapCounter);
   WaitMilisecond(4.5);
 end;
@@ -171,11 +194,11 @@ begin
   FSwapCounter := 0;
   itemsCount := GetItemsCount;
   FModel.GenerateData(itemsCount);
-  FView.DrawBoard(FModel.FData);
+  DrawBoard;
   sw := TStopwatch.StartNew;
   DoInsertionSort(FModel.FData);
   elapsedTime := sw.Elapsed;
-  FView.DrawResults('InsertionSort', itemsCount, elapsedTime, FSwapCounter);
+  DrawResult('InsertionSort', itemsCount, elapsedTime);
 end;
 
 procedure TBoardController.QuickSort;
@@ -188,11 +211,11 @@ begin
   FSwapCounter := 0;
   itemsCount := GetItemsCount;
   FModel.GenerateData(itemsCount);
-  FView.DrawBoard(FModel.FData);
+  DrawBoard;
   sw := TStopwatch.StartNew;
   DoQuickSort(FModel.FData);
   elapsedTime := sw.Elapsed;
-  FView.DrawResults('QuickSort', itemsCount, elapsedTime, FSwapCounter);
+  DrawResult('QuickSort', itemsCount, elapsedTime);
 end;
 
 end.

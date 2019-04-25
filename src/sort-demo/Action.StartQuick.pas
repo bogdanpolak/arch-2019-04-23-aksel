@@ -15,16 +15,16 @@ type
 
 implementation
 
-uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan;
-
-function CountVisibleItems (paintbox: TPaintBox): integer;
-begin
-  Result := round(paintbox.Width / 6) - 1;
-end;
+uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan,
+  System.Classes;
 
 procedure TStartQuickAction.DoWork;
 begin
-  FController.QuickSort;
+  TThread.CreateAnonymousThread(
+  procedure
+  begin
+    FController.QuickSort;
+  end).Start;
 end;
 
 end.

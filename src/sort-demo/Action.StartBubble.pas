@@ -18,7 +18,10 @@ uses Form.Main, Vcl.ExtCtrls, System.Diagnostics, System.TimeSpan;
 
 procedure TStartBubbleAction.DoWork;
 begin
-  FController.BubbleSort;
+  TThread.CreateAnonymousThread(procedure
+  begin
+    FController.BubbleSort;
+  end).Start;
 end;
 
 end.
