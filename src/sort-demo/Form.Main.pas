@@ -5,9 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Generics.Collections,
-  System.TimeSpan,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  Vcl.StdCtrls;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Controler.Sort,
+  View.Board,
+  View.SortResults,
+  Model.Board,
+  Model.SortResults;
 
 type
   TForm1 = class(TForm)
@@ -17,23 +20,27 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    procedure FormCreate(Sender: TObject);
+    Timer1: TTimer;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
-    procedure swap(i, j: Integer; var data: TArray<Integer>);
+    SortControler1: TSortControler;
+    SortControler2: TSortControler;
+    SortControler3: TSortControler;
+    // ------
+    BoardView1: IBoardView;
+    BoardView2: IBoardView;
+    SortResultView1: ISortResultsView;
+    SortResultView2: ISortResultsView;
+    // ------
+    Board1: TBoard;
+    SortResult1: TSortResults;
+    Board2: TBoard;
+    SortResult2: TSortResults;
   public
-    SwapCounter: Integer;
-    EnableSorting: Boolean;
-    procedure PrepareSortDemo(paintbox: TPaintBox; var data: TArray<Integer>);
-    procedure DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
-    procedure DrawItem(paintbox: TPaintBox; index, value: Integer);
-    procedure GenerateData(var data: TArray<Integer>; items: Integer);
-    procedure DrawResults(paintbox: TPaintBox; const name: string;
-      dataSize: Integer; enlapsed: TTimeSpan; swaps: Integer);
-    procedure QuickSort(var data: TArray<Integer>);
-    procedure InsertionSort(var data: TArray<Integer>);
-    procedure BubbleSort(var data: TArray<Integer>);
   end;
 
 var
@@ -43,206 +50,87 @@ implementation
 
 {$R *.dfm}
 
-uses
-  System.Diagnostics, System.Math, Colors.Hsl, Action.StartBubble,
-  Action.StartInsertion, Action.StartQuick;
+uses View.Vcl.SortResults, View.Vcl.Board;
 
-const
-  MaxValue = 100;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  BoardView1.DrawBoard;
+  SortControler1.DoSort (saBubbleSort);
+  Timer1.Enabled := True;
+end;
 
 procedure TForm1.Button2Click(Sender: TObject);
-var
-  data: TArray<Integer>;
 begin
-  PrepareSortDemo(PaintBox2, data);
-  QuickSort(data);
-end;
-
-var
-  SwapPaintBox: TPaintBox;
-
-procedure WaitMilisecond(timeMs: double);
-var
-  startTime64, endTime64, frequency64: Int64;
-begin
-  QueryPerformanceFrequency(frequency64);
-  QueryPerformanceCounter(startTime64);
-  QueryPerformanceCounter(endTime64);
-  while ((endTime64 - startTime64) / frequency64 * 1000 < timeMs) do
-    QueryPerformanceCounter(endTime64);
-end;
-
-procedure TForm1.swap(i, j: Integer; var data: TArray<Integer>);
-var
-  v: Integer;
-begin
-  v := data[i];
-  data[i] := data[j];
-  data[j] := v;
-  DrawItem(SwapPaintBox, i, data[i]);
-  DrawItem(SwapPaintBox, j, data[j]);
-  Application.ProcessMessages;
-  inc(SwapCounter);
-  WaitMilisecond(4.5);
-end;
-
-procedure TForm1.BubbleSort(var data: TArray<Integer>);
-var
-  i: Integer;
-  j: Integer;
-begin
-  for i := 0 to Length(data) - 1 do
-    for j := 0 to Length(data) - 2 do
-      if data[j] > data[j + 1] then
-      begin
-        swap(j, j + 1, data);
-        if not(EnableSorting) then
-          break;
-      end;
-end;
-
-procedure TForm1.InsertionSort(var data: TArray<Integer>);
-var
-  i: Integer;
-  j: Integer;
-  mini: Integer;
-  minv: Integer;
-begin
-  for i := 0 to Length(data) - 1 do
-  begin
-    mini := i;
-    minv := data[i];
-    for j := i + 1 to Length(data) - 1 do
-    begin
-      if data[j] < minv then
-      begin
-        mini := j;
-        minv := data[j];
-      end;
-    end;
-    if mini <> i then
-      swap(i, mini, data);
-    if not(EnableSorting) then
-      break;
-  end;
-end;
-
-procedure TForm1.QuickSort(var data: TArray<Integer>);
-  procedure qsort(idx1, idx2: Integer);
-  var
-    i: Integer;
-    j: Integer;
-    mediana: Integer;
-  begin
-    i := idx1;
-    j := idx2;
-    mediana := data[(i + j) div 2];
-    repeat
-      while data[i] < mediana do
-        inc(i);
-      while mediana < data[j] do
-        dec(j);
-      if i <= j then
-      begin
-        swap(i, j, data);
-        inc(i);
-        dec(j);
-      end;
-    until i > j;
-    if EnableSorting then
-    begin
-      if idx1 < j then
-        qsort(idx1, j);
-      if i < idx2 then
-        qsort(i, idx2);
-    end;
-  end;
-
-begin
-  qsort(0, Length(data) - 1);
-end;
-
-function GetColor(value: Integer): TColor;
-var
-  Hue: Integer;
-  col: TRgbColor;
-begin
-  Hue := round(value * 256 / (MaxValue + 1));
-  col := HSLtoRGB(Hue, 220, 120);
-  Result := RGB(col.r, col.g, col.b);
-end;
-
-procedure TForm1.DrawItem(paintbox: TPaintBox; index, value: Integer);
-var
-  c: TCanvas;
-  x: Integer;
-  maxhg: Integer;
-  j: Integer;
-begin
-  maxhg := paintbox.Height;
-  j := round(value * maxhg / MaxValue);
-  c := paintbox.Canvas;
-  x := index * 6;
-  c.Pen.Style := psClear;
-  c.Brush.Color := paintbox.Color;
-  c.Rectangle(x, 0, x + 5, maxhg - (j) + 1);
-  c.Brush.Color := GetColor(value);
-  c.Rectangle(x, maxhg - (j), x + 5, maxhg);
-end;
-
-procedure TForm1.DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
-var
-  i: Integer;
-begin
-  paintbox.Canvas.Brush.Color := paintbox.Color;
-  paintbox.Canvas.FillRect(Rect(0, 0, paintbox.Width, paintbox.Height));
-  for i := 0 to Length(data) - 1 do
-    DrawItem(paintbox, i, data[i]);
-end;
-
-procedure TForm1.DrawResults(paintbox: TPaintBox; const name: string;
-  dataSize: Integer; enlapsed: TTimeSpan; swaps: Integer);
-begin
-  paintbox.Canvas.Brush.Style := bsClear;
-  paintbox.Canvas.Font.Height := 18;
-  paintbox.Canvas.Font.Style := [fsBold];
-  paintbox.Canvas.TextOut(10, 5, name);
-  paintbox.Canvas.Font.Style := [];
-  paintbox.Canvas.TextOut(10, 25, Format('items: %d', [dataSize]));
-  paintbox.Canvas.TextOut(10, 45, Format('time: %.3f',
-    [enlapsed.TotalSeconds]));
-  paintbox.Canvas.TextOut(10, 65, Format('swaps: %d', [swaps]));
+  BoardView2.DrawBoard;
+  SortControler2.DoSort (saQuickSort);
 end;
 
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  EnableSorting := false;
+  // EnableSorting := false;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  TStartBubbleAction.CreateAndInit(Button1, PaintBox1, 'Bubble Sort');
-  TStartQuickAction.CreateAndInit(Button2, PaintBox2, 'Quick Sort');
-//  TStartInsertionAction.CreateAndInit(Button3, PaintBox3, 'Insertion Sort');
+  Board1 := TBoard.Create;
+  SortResult1 := TSortResults.Create;
+  BoardView1 := TBoardView.CreateAndInit(PaintBox1, Board1);
+  Board1.GenerateData( BoardView1.CountVisibleItems );
+  SortResult1.Name := 'BubbleSort';
+  SortResultView1 := TSortResultsView.CreateAndInit(PaintBox1, SortResult1);
+  BoardView1.DrawBoard;
+  SortControler1 := TSortControler.Create ( Board1,
+    SortResult1, BoardView1, SortResultView1 );
+  // -------
+  Board2 := TBoard.Create;
+  SortResult2 := TSortResults.Create;
+  BoardView2 := TBoardView.CreateAndInit(PaintBox2, Board2);
+  Board2.GenerateData( BoardView2.CountVisibleItems );
+  SortResult2.Name := 'Quick Sort';
+  SortResultView2 := TSortResultsView.CreateAndInit(PaintBox2, SortResult2);
+  BoardView2.DrawBoard;
+  SortControler2 := TSortControler.Create ( Board2,
+    SortResult2, BoardView2, SortResultView2 );
+  // TODO: Brakuje zwalniania pamiêci: Board, SortResult, FBubbleSortControler
 end;
 
-procedure TForm1.GenerateData(var data: TArray<Integer>; items: Integer);
+procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  i: Integer;
+  msg1: TSortMessage;
+  BoardView: IBoardView;
+  SortResultView: ISortResultsView;
 begin
-  randomize;
-  SetLength(data, items);
-  for i := 0 to Length(data) - 1 do
-    data[i] := random(MaxValue) + 1;
-end;
+  while FMessageQueue.QueueSize>0 do begin
+    msg1 := FMessageQueue.PopItem;
+    if msg1.Board = Board1 then begin
+      BoardView := BoardView1;
+      SortResultView := SortResultView1;
+    end
+    else if msg1.Board = Board2 then
+    begin
+      BoardView := BoardView2;
+      SortResultView := SortResultView2;
+    end;
+    (*
+    else
+      BoardView := BoardView3;
+      SortResultView := SortResultView3;
+    *)
+    case msg1.MessageType of
+      mtSwap: begin
+        BoardView.DrawItem(msg1.SwapIndex1);
+        BoardView.DrawItem(msg1.SwapIndex2);
+      end;
+      mtDone: begin
+        SortResultView.DrawResults;
+      end;
 
-procedure TForm1.PrepareSortDemo(paintbox: TPaintBox;
-  var data: TArray<Integer>);
-var
-  items: Integer;
-begin
-  EnableSorting := true;
-  SwapPaintBox := paintbox;
+    end;
+  end;
+  (*
+  FSwapCounter := 0;
+  *)
 end;
 
 end.

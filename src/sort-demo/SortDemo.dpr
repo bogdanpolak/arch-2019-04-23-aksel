@@ -8,13 +8,10 @@ uses
   Model.SortResults in 'Model.SortResults.pas',
   View.Board in 'View.Board.pas',
   View.SortResults in 'View.SortResults.pas',
-  Action.StartBubble in 'Action.StartBubble.pas',
-  Action.StartQuick in 'Action.StartQuick.pas',
-  Action.StartInsertion in 'Action.StartInsertion.pas',
-  Action.Sort in 'Action.Sort.pas',
-  Controler.BubbleSort in 'Controler.BubbleSort.pas',
-  Controler.Basic in 'Controler.Basic.pas',
-  Controler.Thread in 'Controler.Thread.pas';
+  Controler.Sort in 'Controler.Sort.pas',
+  Thread.SortControler in 'Thread.SortControler.pas',
+  View.Vcl.Board in 'View.Vcl.Board.pas',
+  View.Vcl.SortResults in 'View.Vcl.SortResults.pas';
 
 {$R *.res}
 
