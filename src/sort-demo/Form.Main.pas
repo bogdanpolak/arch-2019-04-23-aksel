@@ -21,10 +21,10 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button2Click(Sender: TObject);
   private
-    EnableSorting: Boolean;
     procedure swap(i, j: Integer; var data: TArray<Integer>);
   public
     SwapCounter: Integer;
+    EnableSorting: Boolean;
     procedure PrepareSortDemo(paintbox: TPaintBox; var data: TArray<Integer>);
     procedure DrawBoard(paintbox: TPaintBox; const data: TArray<Integer>);
     procedure DrawItem(paintbox: TPaintBox; index, value: Integer);
@@ -221,9 +221,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  TStartBubbleAction.CreateAndInit(Button1,'Bubble Sort');
-  TStartQuickAction.CreateAndInit(Button2,'Quick Sort');
-  TStartInsertionAction.CreateAndInit(Button3,'Insertion Sort');
+  TStartBubbleAction.CreateAndInit(Button1, PaintBox1, 'Bubble Sort');
+  TStartQuickAction.CreateAndInit(Button2, PaintBox2, 'Quick Sort');
+//  TStartInsertionAction.CreateAndInit(Button3, PaintBox3, 'Insertion Sort');
 end;
 
 procedure TForm1.GenerateData(var data: TArray<Integer>; items: Integer);
