@@ -3,11 +3,12 @@ unit Thread.SortControler;
 interface
 
 uses
-  System.Classes;
+  System.Classes,
+  System.SysUtils;
 
 type
-  TSortProc = procedure of object;
-  TCallBackAfterSort = procedure of object;
+  TSortProc = TProc;
+  TCallBackAfterSort = TProc;
 
   TSortControlerThread = class(TThread)
   private

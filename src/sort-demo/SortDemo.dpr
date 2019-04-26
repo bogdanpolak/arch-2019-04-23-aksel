@@ -8,10 +8,8 @@ uses
   Model.SortResults in 'Model.SortResults.pas',
   View.Board in 'View.Board.pas',
   View.SortResults in 'View.SortResults.pas',
-  Controler.QuickSort in 'Controler.QuickSort.pas',
   Controler.Sort in 'Controler.Sort.pas',
   Thread.SortControler in 'Thread.SortControler.pas',
-  Controler.BubbleSort in 'Controler.BubbleSort.pas',
   View.Vcl.Board in 'View.Vcl.Board.pas',
   View.Vcl.SortResults in 'View.Vcl.SortResults.pas';
 

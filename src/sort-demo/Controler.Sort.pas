@@ -12,74 +12,72 @@ uses
   Thread.SortControler;
 
 type
+  TSortAlgorithm = (saBubbleSort, saQuickSort, saInsertionSort);
+
   TSortControler = class
   protected
-    FStopwatch: TStopwatch;
-
     FBoard: TBoard;
     FSortResult: TSortResults;
-
     FBoardView: IBoardView;
-    FSResultView: ISortResultsView;
-
-    FSwapCounter: Integer;
-    FSWatch: TStopwatch;
+    FSortResultView: ISortResultsView;
     FControlerThread: TSortControlerThread;
-    procedure VisualSwap(AIdx1: Integer; AIdx2: Integer);
-    procedure WaitMilisecond(ATimeMs: Double);
   public
-    constructor CreateAndInit(); virtual;
+    constructor Create(ABoard: TBoard; ASortResult: TSortResults;
+      ABoardView: IBoardView; ASortResultView: ISortResultsView);
     destructor Destroy; override;
-    procedure DoSort; virtual; abstract;
+    procedure DoSort(SortAlgorithm: TSortAlgorithm);
   end;
 
 implementation
 
 uses
+  System.SysUtils,
   Winapi.Windows;
 
-{ TControlerBasicSort }
-
-constructor TSortControler.CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox);
+constructor TSortControler.Create(ABoard: TBoard; ASortResult: TSortResults;
+  ABoardView: IBoardView; ASortResultView: ISortResultsView);
 begin
-  inherited Create(AOwner);
-  FPaintBox := APaintBox;
-  FBoard := TBoard.Create;
-  FBoardView := TBoardView.CreateAndInit(FPaintBox, FBoard);
-  FSortResult := TSortResults.Create;
-  FSResultView := TSortResultsView.CreateAndInit(FPaintBox, FSortResult);
+  inherited Create();
+  FBoard := ABoard;
+  FBoardView := ABoardView;
+  FSortResult := ASortResult;
+  FSortResultView := ASortResultView;
 end;
 
 destructor TSortControler.Destroy;
 begin
   FBoard.Free;
   FSortResult.Free;
-  if (FControlerThread<>nil) and FControlerThread.IsRunning then
+  if (FControlerThread <> nil) and FControlerThread.IsRunning then
     FControlerThread.Terminate;
   inherited;
 end;
 
-procedure TSortControler.WaitMilisecond(ATimeMs: Double);
+procedure TSortControler.DoSort(SortAlgorithm: TSortAlgorithm);
 var
-  startTime64, endTime64, frequency64: Int64;
+  StopWatch: TStopwatch;
+  ASortResult: TSortResults;
 begin
-  QueryPerformanceFrequency(frequency64);
-  QueryPerformanceCounter(startTime64);
-  QueryPerformanceCounter(endTime64);
-  while ((endTime64 - startTime64) / frequency64 * 1000 < ATimeMs) do
-    QueryPerformanceCounter(endTime64);
-end;
-
-procedure TSortControler.VisualSwap(AIdx1: Integer; AIdx2: Integer);
-begin
-  FBoard.Swap(AIdx1, AIdx2);
-  TSortControlerThread.Synchronize(FControlerThread, procedure
-  begin
-            FBoardView.DrawItem(AIdx1);
-            FBoardView.DrawItem(AIdx2);
-          end);
-  inc(FSwapCounter);
-  WaitMilisecond(4.5);
+  StopWatch := TStopWatch.StartNew;
+  ASortResult := FSortResult;
+  FControlerThread := TSortControlerThread.CreateAndInit(
+    procedure
+    begin
+      case SortAlgorithm of
+        saBubbleSort:
+          FBoard.SortBubble;
+        saQuickSort:
+          FBoard.SortQuick;
+        saInsertionSort:
+          FBoard.SortInsertion;
+      else
+        raise Exception.Create('Not supported');
+      end;
+    end,
+    procedure
+    begin
+      ASortResult.ElapsedTime := StopWatch.Elapsed;
+    end);
 end;
 
 end.
