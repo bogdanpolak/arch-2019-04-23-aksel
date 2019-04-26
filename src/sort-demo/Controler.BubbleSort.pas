@@ -4,11 +4,11 @@ interface
 
 uses
   Vcl.ExtCtrls, System.Diagnostics, Model.Board, View.Board, View.SortResults,
-  Model.SortResults, Controler.Basic, System.Classes;
+  Model.SortResults, Controler.Sort, System.Classes;
 
 type
 
-  TControlerBubbleSort = class(TControlerBasicSort)
+  TBubbleSortControler = class(TSortControler)
   private
     procedure BubbleSort;
     procedure DoAfterSort;
@@ -20,17 +20,17 @@ type
 implementation
 
 uses
-  Winapi.Windows, Vcl.Forms, Controler.Thread;
+  Winapi.Windows, Vcl.Forms, Thread.SortControler;
 
 { TControlerBubbleSort }
 
-constructor TControlerBubbleSort.CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox);
+constructor TBubbleSortControler.CreateAndInit(AOwner: TComponent; APaintBox: TPaintBox);
 begin
   inherited;
-  FSResult.Name := 'BubbleSort';
+  FSortResult.Name := 'BubbleSort';
 end;
 
-procedure TControlerBubbleSort.BubbleSort;
+procedure TBubbleSortControler.BubbleSort;
 var
   i: Integer;
   j: Integer;
@@ -39,39 +39,31 @@ begin
     for j := 0 to FBoard.Count - 2 do
       if FBoard.Data[j] > FBoard.Data[j + 1] then
       begin
-        FBoard.Swap(j, j + 1);
-        TControlerThread.Synchronize(FControlerThread,
-          procedure
-          begin
-            FBoardView.DrawItem(j);
-            FBoardView.DrawItem(j + 1);
-          end);
-        inc(FSwapCounter);
-        WaitMilisecond(4.5);
+        VisualSwap(j, j+1);
         if FControlerThread.IsTerminated then
           Exit;
       end;
 end;
 
-procedure TControlerBubbleSort.DoSort;
+procedure TBubbleSortControler.DoSort;
 var
   itemCount: Integer;
 begin
   itemCount := FBoardView.CountVisibleItems;
-  FSResult.DataSize := itemCount;
+  FSortResult.DataSize := itemCount;
   FSwapCounter := 0;
 
   FBoard.GenerateData(itemCount);
   FBoardView.DrawBoard;
   FSWatch := TStopwatch.StartNew;
-  FControlerThread := TControlerThread.CreateAndInit(BubbleSort, DoAfterSort);
+  FControlerThread := TSortControlerThread.CreateAndInit(BubbleSort, DoAfterSort);
 end;
 
-procedure TControlerBubbleSort.DoAfterSort;
+procedure TBubbleSortControler.DoAfterSort;
 begin
-  FSResult.ElapsedTime := FSWatch.Elapsed;
-  FSResult.SwapCounter := FSwapCounter;
-  TControlerThread.Synchronize(FControlerThread,
+  FSortResult.ElapsedTime := FSWatch.Elapsed;
+  FSortResult.SwapCounter := FSwapCounter;
+  TSortControlerThread.Synchronize(FControlerThread,
     procedure
     begin
       FSResultView.DrawResults;

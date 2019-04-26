@@ -1,4 +1,4 @@
-unit Controler.Thread;
+unit Thread.SortControler;
 
 interface
 
@@ -9,7 +9,7 @@ type
   TSortProc = procedure of object;
   TCallBackAfterSort = procedure of object;
 
-  TControlerThread = class(TThread)
+  TSortControlerThread = class(TThread)
   private
     FRunning: Boolean;
     FSortProc: TSortProc;
@@ -24,7 +24,7 @@ type
 
 implementation
 
-constructor TControlerThread.CreateAndInit(ASortProc: TSortProc; ACallBackAfterSort: TCallBackAfterSort);
+constructor TSortControlerThread.CreateAndInit(ASortProc: TSortProc; ACallBackAfterSort: TCallBackAfterSort);
 begin
   inherited Create(False);
   FreeOnTerminate := True;
@@ -32,7 +32,7 @@ begin
   FCallBackAfterSort := ACallBackAfterSort;
 end;
 
-procedure TControlerThread.Execute;
+procedure TSortControlerThread.Execute;
 begin
   FRunning := True;
   NameThreadForDebugging('ControlerThread');
@@ -44,12 +44,12 @@ begin
   FRunning := False;
 end;
 
-function TControlerThread.IsRunning: Boolean;
+function TSortControlerThread.IsRunning: Boolean;
 begin
   Result := FRunning and not Terminated;
 end;
 
-function TControlerThread.IsTerminated: Boolean;
+function TSortControlerThread.IsTerminated: Boolean;
 begin
   Result := Self.Terminated;
 end;
