@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit Model.Board;
 
 interface
@@ -25,6 +28,7 @@ type
     function GetCount: Integer;
     procedure DoWait;
   public
+    constructor Create;
     procedure GenerateData(AItemsCnt: Integer);
     procedure Swap(AIdx1, AIdx2: Integer);
     procedure SortBubble;
@@ -37,16 +41,28 @@ type
   EBoardException = class(Exception);
 
 var
-  // TODO: Nie mo�e by� globalne (refactor)
+  { TODO: Nie powinno być globalne
+    * Można przenieść do klasy TBoard (class var), ale to za mało
+    * Trzeba przeanalizować zależności od FMessageQueue
+    * Potrzebna lepsza nazwa }
   FMessageQueue: TThreadedQueue <TSortMessage>;
-
-const
-  MaxValue = 100;
 
 implementation
 
 uses
   Winapi.Windows;
+
+const
+  MaxValue = 200;
+
+
+constructor TBoard.Create;
+begin
+  inherited;
+  if FMessageQueue = nil then
+    // TODO: Brakuje usuwania Message Queue (trzeba to zrobić po zakończeniu wątku)
+    FMessageQueue := TThreadedQueue<TSortMessage>.Create;
+end;
 
 procedure TBoard.GenerateData(AItemsCnt: Integer);
 var
@@ -54,7 +70,7 @@ var
 begin
   Randomize;
   if (AItemsCnt <= 0) then
-    raise EBoardException.Create('Z�a liczba danych do generacji');
+    raise EBoardException.Create('Zła liczba danych do generacji');
   SetLength(FData, AItemsCnt);
   for i := 0 to Length(FData) - 1 do
     FData[i] := Random(MaxValue) + 1;
@@ -129,7 +145,7 @@ begin
     end;
     if mini <> i then
       swap(i, mini);
-    // TODO: Brakuje sprawdzenia czy przy przerwa� algorytm
+    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
   end;
   FMessageQueue.PushItem(
@@ -159,7 +175,7 @@ procedure TBoard.SortQuick;
         dec(j);
       end;
     until i > j;
-    // TODO: Brakuje sprawdzenia czy przy przerwa� algorytm
+    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
     if idx1 < j then
       qsort(idx1, j);
@@ -190,9 +206,4 @@ begin
   SwapIndex2 := AIdx2;
 end;
 
-initialization
-  FMessageQueue := TThreadedQueue<TSortMessage>.Create;
-finalization
-  FMessageQueue.Free;
-  FMessageQueue := nil;
 end.
