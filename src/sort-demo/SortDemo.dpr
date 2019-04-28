@@ -11,7 +11,8 @@ uses
   Controler.Sort in 'Controler.Sort.pas',
   Thread.SortControler in 'Thread.SortControler.pas',
   View.Vcl.Board in 'View.Vcl.Board.pas',
-  View.Vcl.SortResults in 'View.Vcl.SortResults.pas';
+  View.Vcl.SortResults in 'View.Vcl.SortResults.pas',
+  Manager.Sort in 'Manager.Sort.pas';
 
 {$R *.res}
 

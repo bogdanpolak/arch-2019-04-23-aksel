@@ -83,6 +83,7 @@ object Form1: TForm1
       Align = alLeft
       Caption = 'Button3'
       TabOrder = 2
+      OnClick = Button3Click
     end
   end
   object Timer1: TTimer
