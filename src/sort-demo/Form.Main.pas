@@ -9,7 +9,7 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Generics.Collections,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Manager.Sort;
+  Controler.Sort;
 
 type
   TForm1 = class(TForm)
@@ -28,9 +28,9 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
   private
-    BubbleSortManager: TSortManager;
-    QuickSortManager: TSortManager;
-    InsertionSortManager: TSortManager;
+    BubbleSortControler: TSortControler;
+    QuickSortControler: TSortControler;
+    InsertionSortControler: TSortControler;
   public
   end;
 
@@ -41,26 +41,23 @@ implementation
 
 uses
   Model.Board,
-  Controler.Sort;
+  Manager.Sort;
 
 {$R *.dfm}
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  BubbleSortManager.Execute;
-  Timer1.Enabled := True;
+  BubbleSortControler.Execute;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 begin
-  QuickSortManager.Execute;
-  Timer1.Enabled := True;
+  QuickSortControler.Execute;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin
-  InsertionSortManager.Execute;
-  Timer1.Enabled := True;
+  InsertionSortControler.Execute;
 end;
 
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -70,24 +67,24 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  BubbleSortManager := TSortManager.CreateAndInit(Button1, saBubbleSort,
-    PaintBox1);
-  QuickSortManager := TSortManager.CreateAndInit(Button2, saQuickSort,
-    PaintBox2);
-  InsertionSortManager := TSortManager.CreateAndInit(Button3, saInsertionSort,
-    PaintBox3);
+  BubbleSortControler := TSortManager.CreateAndInit(Button1, saBubbleSort,
+    PaintBox1).Controler;
+  QuickSortControler := TSortManager.CreateAndInit(Button2, saQuickSort,
+    PaintBox2).Controler;
+  InsertionSortControler := TSortManager.CreateAndInit(Button3, saInsertionSort,
+    PaintBox3).Controler;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  m: TSortMessage;
+  m: TBoardMessage;
 begin
   while FMessageQueue.QueueSize > 0 do
   begin
     m := FMessageQueue.PopItem;
-    BubbleSortManager.DispatchSortMessage(m);
-    QuickSortManager.DispatchSortMessage(m);
-    InsertionSortManager.DispatchSortMessage(m);
+    BubbleSortControler.DispatchBoardMessage(m);
+    QuickSortControler.DispatchBoardMessage(m);
+    InsertionSortControler.DispatchBoardMessage(m);
   end;
 end;
 

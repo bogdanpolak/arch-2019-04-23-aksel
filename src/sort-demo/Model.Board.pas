@@ -13,7 +13,7 @@ type
 
   TBoard = class;
 
-  TSortMessage = record
+  TBoardMessage = record
     MessageType: TMessageType;
     Board: TBoard;
     SwapIndex1: integer;
@@ -30,8 +30,9 @@ type
     function GetCount: integer;
     procedure DoWait;
   public
+    FSwapCounter: Integer;
     constructor Create;
-    procedure GenerateData(AItemsCnt: integer);
+    procedure GenerateData(AItemsCount: integer);
     procedure Swap(AIdx1, AIdx2: integer);
     procedure SortBubble;
     procedure SortInsertion;
@@ -47,7 +48,7 @@ var
     * Można przenieść do klasy TBoard (class var), ale to za mało
     * Trzeba przeanalizować zależności od FMessageQueue
     * Potrzebna lepsza nazwa }
-  FMessageQueue: TThreadedQueue<TSortMessage>;
+  FMessageQueue: TThreadedQueue<TBoardMessage>;
 
 implementation
 
@@ -59,17 +60,17 @@ begin
   inherited;
   if FMessageQueue = nil then
     // TODO: Brakuje usuwania Message Queue (trzeba to zrobić po zakończeniu wątku)
-    FMessageQueue := TThreadedQueue<TSortMessage>.Create;
+    FMessageQueue := TThreadedQueue<TBoardMessage>.Create;
 end;
 
-procedure TBoard.GenerateData(AItemsCnt: integer);
+procedure TBoard.GenerateData(AItemsCount: integer);
 var
   i: integer;
 begin
   Randomize;
-  if (AItemsCnt <= 0) then
+  if (AItemsCount <= 0) then
     raise EBoardException.Create('Zła liczba danych do generacji');
-  SetLength(FData, AItemsCnt);
+  SetLength(FData, AItemsCount);
   for i := 0 to Length(FData) - 1 do
     FData[i] := Random(MaxValue) + 1;
 end;
@@ -86,7 +87,8 @@ begin
   v := FData[AIdx1];
   FData[AIdx1] := FData[AIdx2];
   FData[AIdx2] := v;
-  FMessageQueue.PushItem(TSortMessage.CreateMessageSwap(Self, AIdx1, AIdx2));
+  FMessageQueue.PushItem(TBoardMessage.CreateMessageSwap(Self, AIdx1, AIdx2));
+  FSwapCounter := FSwapCounter + 1;
   DoWait;
 end;
 
@@ -115,7 +117,6 @@ begin
     for j := 0 to Count - 2 do
       if FData[j] > FData[j + 1] then
         Swap(j, j + 1);
-  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
 
 procedure TBoard.SortInsertion;
@@ -142,7 +143,6 @@ begin
     // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
   end;
-  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
 
 procedure TBoard.SortQuick;
@@ -177,18 +177,17 @@ procedure TBoard.SortQuick;
 
 begin
   qsort(0, Count - 1);
-  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
 
-{ TSortMessage }
+{ TBoardMessage }
 
-constructor TSortMessage.CreateMessageDone(ABoard: TBoard);
+constructor TBoardMessage.CreateMessageDone(ABoard: TBoard);
 begin
   MessageType := mtDone;
   Board := ABoard;
 end;
 
-constructor TSortMessage.CreateMessageSwap(ABoard: TBoard;
+constructor TBoardMessage.CreateMessageSwap(ABoard: TBoard;
   AIdx1, AIdx2: integer);
 begin
   MessageType := mtSwap;
