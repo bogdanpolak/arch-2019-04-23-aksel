@@ -1,15 +1,18 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit View.Vcl.Board;
 
 interface
 
 uses
-  System.UITypes,
+  System.UITypes, System.TimeSpan,
   Vcl.ExtCtrls,
   Model.Board,
   View.Board;
 
 type
-  TBoardView = class(TInterfacedObject, IBoardView)
+  TVclBoardView = class(TInterfacedObject, IBoardView)
   private
     FPaintBox: TPaintBox;
     FBoard: TBoard;
@@ -18,24 +21,27 @@ type
     constructor CreateAndInit(APaintBox: TPaintBox; ABoard: TBoard);
     procedure DrawBoard;
     procedure DrawItem(AIndex: Integer);
+    procedure DrawResults (const AAlgorithmName: string;
+      AElapsedTime: TTimeSpan);
     function CountVisibleItems: Integer;
   end;
 
 implementation
 
 uses
-  Winapi.Windows, System.Classes,
+  Winapi.Windows,
+  System.Classes, System.SysUtils,
   Vcl.Graphics,
   Colors.Hsl;
 
-constructor TBoardView.CreateAndInit(APaintBox: TPaintBox; ABoard: TBoard);
+constructor TVclBoardView.CreateAndInit(APaintBox: TPaintBox; ABoard: TBoard);
 begin
   inherited Create;
   FPaintBox := APaintBox;
   FBoard := ABoard;
 end;
 
-procedure TBoardView.DrawBoard;
+procedure TVclBoardView.DrawBoard;
 var
   i: Integer;
 begin
@@ -45,12 +51,12 @@ begin
     DrawItem(i);
 end;
 
-function TBoardView.CountVisibleItems: Integer;
+function TVclBoardView.CountVisibleItems: Integer;
 begin
   Result := round(FPaintBox.Width / 6) - 1;
 end;
 
-procedure TBoardView.DrawItem(AIndex: Integer);
+procedure TVclBoardView.DrawItem(AIndex: Integer);
 var
   c: TCanvas;
   x: Integer;
@@ -58,7 +64,7 @@ var
   j: Integer;
 begin
   maxhg := FPaintBox.Height;
-  j := round(FBoard.Data[AIndex] * maxhg / MaxValue);
+  j := round(FBoard.Data[AIndex] * maxhg / TBoard.MaxValue);
   c := FPaintBox.Canvas;
   x := AIndex * 6;
   c.Pen.Style := psClear;
@@ -68,12 +74,29 @@ begin
   c.Rectangle(x, maxhg - (j), x + 5, maxhg);
 end;
 
-function TBoardView.GetColor(value: Integer): TColor;
+procedure TVclBoardView.DrawResults (const AAlgorithmName: string;
+  AElapsedTime: TTimeSpan);
+begin
+  FPaintbox.Canvas.Brush.Style := bsClear;
+  FPaintbox.Canvas.Font.Height := 18;
+  FPaintbox.Canvas.Font.Style := [fsBold];
+  FPaintbox.Canvas.TextOut(10, 5, AAlgorithmName);
+  FPaintbox.Canvas.Font.Style := [];
+  FPaintbox.Canvas.TextOut(10, 25, Format('items: %d',
+    [FBoard.Count]));
+  FPaintbox.Canvas.TextOut(10, 45, Format('time: %.3f',
+    [AElapsedTime.TotalSeconds]));
+  FPaintbox.Canvas.TextOut(10, 65, Format('swaps: %d',
+    [FBoard.FSwapCounter]));
+end;
+
+
+function TVclBoardView.GetColor(value: Integer): TColor;
 var
   Hue: Integer;
   col: TRgbColor;
 begin
-  Hue := Round(value * 256 / (MaxValue + 1));
+  Hue := Round(value * 256 / (TBoard.MaxValue + 1));
   col := HSLtoRGB(Hue, 220, 120);
   Result := RGB(col.r, col.g, col.b);
 end;

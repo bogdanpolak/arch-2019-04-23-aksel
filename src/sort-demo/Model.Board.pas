@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit Model.Board;
 
 interface
@@ -10,71 +13,82 @@ type
 
   TBoard = class;
 
-  TSortMessage = record
+  TBoardMessage = record
     MessageType: TMessageType;
     Board: TBoard;
     SwapIndex1: integer;
     SwapIndex2: integer;
-    constructor CreateMessageSwap (ABoard: TBoard; AIdx1, AIdx2: Integer);
-    constructor CreateMessageDone (ABoard: TBoard);
+    constructor CreateMessageSwap(ABoard: TBoard; AIdx1, AIdx2: integer);
+    constructor CreateMessageDone(ABoard: TBoard);
   end;
 
   TBoard = class
+  const
+    MaxValue = 200;
   private
-    FData: TArray<Integer>;
-    function GetCount: Integer;
+    FData: TArray<integer>;
+    function GetCount: integer;
     procedure DoWait;
   public
-    procedure GenerateData(AItemsCnt: Integer);
-    procedure Swap(AIdx1, AIdx2: Integer);
+    FSwapCounter: Integer;
+    constructor Create;
+    procedure GenerateData(AItemsCount: integer);
+    procedure Swap(AIdx1, AIdx2: integer);
     procedure SortBubble;
     procedure SortInsertion;
     procedure SortQuick;
-    property Count: Integer read GetCount;
-    property Data: TArray<Integer> read FData;
+    property Count: integer read GetCount;
+    property Data: TArray<integer> read FData;
   end;
 
   EBoardException = class(Exception);
 
 var
-  // TODO: Nie mo�e by� globalne (refactor)
-  FMessageQueue: TThreadedQueue <TSortMessage>;
-
-const
-  MaxValue = 100;
+  { TODO: Nie powinno być globalne
+    * Można przenieść do klasy TBoard (class var), ale to za mało
+    * Trzeba przeanalizować zależności od FMessageQueue
+    * Potrzebna lepsza nazwa }
+  FMessageQueue: TThreadedQueue<TBoardMessage>;
 
 implementation
 
 uses
   Winapi.Windows;
 
-procedure TBoard.GenerateData(AItemsCnt: Integer);
+constructor TBoard.Create;
+begin
+  inherited;
+  if FMessageQueue = nil then
+    // TODO: Brakuje usuwania Message Queue (trzeba to zrobić po zakończeniu wątku)
+    FMessageQueue := TThreadedQueue<TBoardMessage>.Create;
+end;
+
+procedure TBoard.GenerateData(AItemsCount: integer);
 var
-  i: Integer;
+  i: integer;
 begin
   Randomize;
-  if (AItemsCnt <= 0) then
-    raise EBoardException.Create('Z�a liczba danych do generacji');
-  SetLength(FData, AItemsCnt);
+  if (AItemsCount <= 0) then
+    raise EBoardException.Create('Zła liczba danych do generacji');
+  SetLength(FData, AItemsCount);
   for i := 0 to Length(FData) - 1 do
     FData[i] := Random(MaxValue) + 1;
 end;
 
-function TBoard.GetCount: Integer;
+function TBoard.GetCount: integer;
 begin
   Result := Length(FData);
 end;
 
-procedure TBoard.Swap(AIdx1, AIdx2: Integer);
+procedure TBoard.Swap(AIdx1, AIdx2: integer);
 var
-  v: Integer;
+  v: integer;
 begin
   v := FData[AIdx1];
   FData[AIdx1] := FData[AIdx2];
   FData[AIdx2] := v;
-  FMessageQueue.PushItem(
-    TSortMessage.CreateMessageSwap(Self, AIdx1, AIdx2)
-  );
+  FMessageQueue.PushItem(TBoardMessage.CreateMessageSwap(Self, AIdx1, AIdx2));
+  FSwapCounter := FSwapCounter + 1;
   DoWait;
 end;
 
@@ -96,53 +110,47 @@ end;
 
 procedure TBoard.SortBubble;
 var
-  i: Integer;
-  j: Integer;
+  i: integer;
+  j: integer;
 begin
   for i := 0 to Count - 1 do
     for j := 0 to Count - 2 do
       if FData[j] > FData[j + 1] then
-        Swap (j, j+1);
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
+        Swap(j, j + 1);
 end;
-
 
 procedure TBoard.SortInsertion;
 var
-  i: Integer;
-  j: Integer;
-  mini: Integer;
-  minv: Integer;
+  i: integer;
+  j: integer;
+  mini: integer;
+  minv: integer;
 begin
-  for i := 0 to Length(data) - 1 do
+  for i := 0 to Length(Data) - 1 do
   begin
     mini := i;
-    minv := data[i];
-    for j := i + 1 to Length(data) - 1 do
+    minv := Data[i];
+    for j := i + 1 to Length(Data) - 1 do
     begin
-      if data[j] < minv then
+      if Data[j] < minv then
       begin
         mini := j;
-        minv := data[j];
+        minv := Data[j];
       end;
     end;
     if mini <> i then
-      swap(i, mini);
-    // TODO: Brakuje sprawdzenia czy przy przerwa� algorytm
+      Swap(i, mini);
+    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
   end;
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
 end;
 
-
 procedure TBoard.SortQuick;
-  procedure qsort(idx1, idx2: Integer);
+  procedure qsort(idx1, idx2: integer);
   var
-    i: Integer;
-    j: Integer;
-    mediana: Integer;
+    i: integer;
+    j: integer;
+    mediana: integer;
   begin
     i := idx1;
     j := idx2;
@@ -159,7 +167,7 @@ procedure TBoard.SortQuick;
         dec(j);
       end;
     until i > j;
-    // TODO: Brakuje sprawdzenia czy przy przerwa� algorytm
+    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
     if idx1 < j then
       qsort(idx1, j);
@@ -169,20 +177,18 @@ procedure TBoard.SortQuick;
 
 begin
   qsort(0, Count - 1);
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
 end;
 
+{ TBoardMessage }
 
-{ TSortMessage }
-
-constructor TSortMessage.CreateMessageDone (ABoard: TBoard);
+constructor TBoardMessage.CreateMessageDone(ABoard: TBoard);
 begin
   MessageType := mtDone;
   Board := ABoard;
 end;
 
-constructor TSortMessage.CreateMessageSwap(ABoard: TBoard; AIdx1, AIdx2: Integer);
+constructor TBoardMessage.CreateMessageSwap(ABoard: TBoard;
+  AIdx1, AIdx2: integer);
 begin
   MessageType := mtSwap;
   Board := ABoard;
@@ -190,9 +196,4 @@ begin
   SwapIndex2 := AIdx2;
 end;
 
-initialization
-  FMessageQueue := TThreadedQueue<TSortMessage>.Create;
-finalization
-  FMessageQueue.Free;
-  FMessageQueue := nil;
 end.

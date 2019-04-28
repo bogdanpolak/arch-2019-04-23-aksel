@@ -1,14 +1,15 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit Controler.Sort;
 
 interface
 
 uses
-  System.Diagnostics, System.Classes,
+  System.Diagnostics, System.Classes, System.TimeSpan,
   Vcl.ExtCtrls,
   Model.Board,
-  Model.SortResults,
   View.Board,
-  View.SortResults,
   Thread.SortControler;
 
 type
@@ -16,16 +17,19 @@ type
 
   TSortControler = class
   protected
+    FElapsedTime: TTimeSpan;
+    FSortAlgorithm: TSortAlgorithm;
     FBoard: TBoard;
-    FSortResult: TSortResults;
     FBoardView: IBoardView;
-    FSortResultView: ISortResultsView;
     FControlerThread: TSortControlerThread;
+    procedure DoSort(ASortAlgorithm: TSortAlgorithm);
   public
-    constructor Create(ABoard: TBoard; ASortResult: TSortResults;
-      ABoardView: IBoardView; ASortResultView: ISortResultsView);
+    constructor Create(ABoard: TBoard;  ABoardView: IBoardView);
     destructor Destroy; override;
-    procedure DoSort(SortAlgorithm: TSortAlgorithm);
+    procedure Execute;
+    function DispatchBoardMessage(m: TBoardMessage): boolean;
+    property SortAlgorithm: TSortAlgorithm read FSortAlgorithm 
+      write FSortAlgorithm;
   end;
 
 implementation
@@ -34,36 +38,31 @@ uses
   System.SysUtils,
   Winapi.Windows;
 
-constructor TSortControler.Create(ABoard: TBoard; ASortResult: TSortResults;
-  ABoardView: IBoardView; ASortResultView: ISortResultsView);
+constructor TSortControler.Create(ABoard: TBoard;  ABoardView: IBoardView);
 begin
   inherited Create();
   FBoard := ABoard;
   FBoardView := ABoardView;
-  FSortResult := ASortResult;
-  FSortResultView := ASortResultView;
 end;
 
 destructor TSortControler.Destroy;
 begin
-  FBoard.Free;
-  FSortResult.Free;
-  if (FControlerThread <> nil) and FControlerThread.IsRunning then
+  if (FControlerThread <> nil) and FControlerThread.IsRunning then begin
     FControlerThread.Terminate;
+  end;
   inherited;
 end;
 
-procedure TSortControler.DoSort(SortAlgorithm: TSortAlgorithm);
+procedure TSortControler.DoSort(ASortAlgorithm: TSortAlgorithm);
 var
   StopWatch: TStopwatch;
-  ASortResult: TSortResults;
 begin
-  StopWatch := TStopWatch.StartNew;
-  ASortResult := FSortResult;
+  FSortAlgorithm := ASortAlgorithm;
+  StopWatch := TStopwatch.StartNew;
   FControlerThread := TSortControlerThread.CreateAndInit(
     procedure
     begin
-      case SortAlgorithm of
+      case ASortAlgorithm of
         saBubbleSort:
           FBoard.SortBubble;
         saQuickSort:
@@ -76,8 +75,43 @@ begin
     end,
     procedure
     begin
-      ASortResult.ElapsedTime := StopWatch.Elapsed;
+      FElapsedTime := StopWatch.Elapsed;
+      FMessageQueue.PushItem(TBoardMessage.CreateMessageDone(FBoard));
     end);
 end;
+
+procedure TSortControler.Execute;
+begin
+  FBoard.GenerateData(FBoardView.CountVisibleItems);
+  FBoardView.DrawBoard;
+  DoSort(FSortAlgorithm);
+end;
+
+function TSortControler.DispatchBoardMessage(m: TBoardMessage): boolean;
+var
+  AName: String;
+begin
+  Result := (FBoard = m.Board);
+  if Result then begin
+    case FSortAlgorithm of
+      saBubbleSort:
+        AName := 'Bubble Sort';
+      saQuickSort:
+        AName := 'Quick Sort';
+      saInsertionSort:
+        AName := 'Insertion Sort';
+    end;
+    case m.MessageType of
+      mtSwap:
+        begin
+          FBoardView.DrawItem(m.SwapIndex1);
+          FBoardView.DrawItem(m.SwapIndex2);
+        end;
+      mtDone:
+        FBoardView.DrawResults (AName, FElapsedTime);
+    end;
+  end;
+end;
+
 
 end.
