@@ -21,6 +21,7 @@ type
     Button2: TButton;
     Button3: TButton;
     Timer1: TTimer;
+    PaintBox3: TPaintBox;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
