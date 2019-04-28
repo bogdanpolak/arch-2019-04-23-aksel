@@ -8,27 +8,31 @@ interface
 uses
   System.Classes,
   Vcl.StdCtrls, Vcl.ExtCtrls,
-  Model.Board, Model.SortResults, View.Vcl.Board, View.Vcl.SortResults,
+  Model.Board, Model.SortResults, View.Board, View.SortResults,
   Controler.Sort;
 
 type
   TSortManager = class(TComponent)
   private
+    FSortAlgorithm: TSortAlgorithm;
     FBoard: TBoard;
     FSortResult: TSortResults;
-    FBoardView: TBoardView;
-    FSortResultView: TSortResultsView;
     FSortControler: TSortControler;
-    FSortAlgorithm: TSortAlgorithm;
+    FBoardView: IBoardView;
+    FSortResultView: ISortResultsView;
     function GetAlgorithmName: string;
   public
     constructor CreateAndInit(AOwner: TComponent;
       ASortAlgorithm: TSortAlgorithm; APaintBox: TPaintBox);
+    destructor Destroy; override;
     procedure Execute;
     function DispatchSortMessage(m: TSortMessage): boolean;
   end;
 
 implementation
+
+uses
+  View.Vcl.Board, View.Vcl.SortResults;
 
 constructor TSortManager.CreateAndInit(AOwner: TComponent;
   ASortAlgorithm: TSortAlgorithm; APaintBox: TPaintBox);
@@ -42,6 +46,14 @@ begin
   FSortResultView := TSortResultsView.CreateAndInit(APaintBox, FSortResult);
   FSortControler := TSortControler.Create(FBoard, FSortResult, FBoardView,
     FSortResultView);
+end;
+
+destructor TSortManager.Destroy;
+begin
+  FSortControler.Free;
+  FSortResult.Free;
+  FBoard.Free;
+  inherited;
 end;
 
 function TSortManager.DispatchSortMessage(m: TSortMessage): boolean;

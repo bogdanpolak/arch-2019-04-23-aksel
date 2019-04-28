@@ -49,10 +49,9 @@ end;
 
 destructor TSortControler.Destroy;
 begin
-  FBoard.Free;
-  FSortResult.Free;
-  if (FControlerThread <> nil) and FControlerThread.IsRunning then
+  if (FControlerThread <> nil) and FControlerThread.IsRunning then begin
     FControlerThread.Terminate;
+  end;
   inherited;
 end;
 
