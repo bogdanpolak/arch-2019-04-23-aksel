@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit Controler.Sort;
 
 interface
@@ -58,7 +61,7 @@ var
   StopWatch: TStopwatch;
   ASortResult: TSortResults;
 begin
-  StopWatch := TStopWatch.StartNew;
+  StopWatch := TStopwatch.StartNew;
   ASortResult := FSortResult;
   FControlerThread := TSortControlerThread.CreateAndInit(
     procedure

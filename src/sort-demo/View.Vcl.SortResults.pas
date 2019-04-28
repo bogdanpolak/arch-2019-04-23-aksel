@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit View.Vcl.SortResults;
 
 interface
@@ -23,7 +26,6 @@ uses
   System.SysUtils,
   Vcl.Graphics;
 
-
 constructor TSortResultsView.CreateAndInit(APaintbox: TPaintBox;
   ASortResult: TSortResults);
 begin
@@ -42,7 +44,8 @@ begin
   FPaintbox.Canvas.TextOut(10, 25, Format('items: %d', [FSortResult.DataSize]));
   FPaintbox.Canvas.TextOut(10, 45, Format('time: %.3f',
     [FSortResult.ElapsedTime.TotalSeconds]));
-  FPaintbox.Canvas.TextOut(10, 65, Format('swaps: %d', [FSortResult.SwapCounter]));
+  FPaintbox.Canvas.TextOut(10, 65, Format('swaps: %d',
+    [FSortResult.SwapCounter]));
 end;
 
 end.

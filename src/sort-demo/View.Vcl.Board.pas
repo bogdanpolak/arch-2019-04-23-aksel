@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit View.Vcl.Board;
 
 interface
@@ -58,7 +61,7 @@ var
   j: Integer;
 begin
   maxhg := FPaintBox.Height;
-  j := round(FBoard.Data[AIndex] * maxhg / MaxValue);
+  j := round(FBoard.Data[AIndex] * maxhg / TBoard.MaxValue);
   c := FPaintBox.Canvas;
   x := AIndex * 6;
   c.Pen.Style := psClear;
@@ -73,7 +76,7 @@ var
   Hue: Integer;
   col: TRgbColor;
 begin
-  Hue := Round(value * 256 / (MaxValue + 1));
+  Hue := Round(value * 256 / (TBoard.MaxValue + 1));
   col := HSLtoRGB(Hue, 220, 120);
   Result := RGB(col.r, col.g, col.b);
 end;

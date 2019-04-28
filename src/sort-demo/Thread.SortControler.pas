@@ -1,3 +1,6 @@
+﻿{ * ------------------------------------------------------------------------
+  * ♥  Akademia BSC © 2019  ♥
+  *  ----------------------------------------------------------------------- * }
 unit Thread.SortControler;
 
 interface
@@ -18,14 +21,16 @@ type
   protected
     procedure Execute; override;
   public
-    constructor CreateAndInit(ASortProc: TSortProc; ACallBackAfterSort: TCallBackAfterSort);
+    constructor CreateAndInit(ASortProc: TSortProc;
+      ACallBackAfterSort: TCallBackAfterSort);
     function IsTerminated: Boolean;
     function IsRunning: Boolean;
   end;
 
 implementation
 
-constructor TSortControlerThread.CreateAndInit(ASortProc: TSortProc; ACallBackAfterSort: TCallBackAfterSort);
+constructor TSortControlerThread.CreateAndInit(ASortProc: TSortProc;
+  ACallBackAfterSort: TCallBackAfterSort);
 begin
   inherited Create(False);
   FreeOnTerminate := True;
@@ -36,6 +41,7 @@ end;
 procedure TSortControlerThread.Execute;
 begin
   FRunning := True;
+  // TODO: Wątek powinien nazywać się tak samo jak algortym sotrowania
   NameThreadForDebugging('ControlerThread');
   if Assigned(FSortProc) then
     FSortProc;

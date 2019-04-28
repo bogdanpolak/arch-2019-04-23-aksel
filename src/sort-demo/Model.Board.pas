@@ -18,24 +18,26 @@ type
     Board: TBoard;
     SwapIndex1: integer;
     SwapIndex2: integer;
-    constructor CreateMessageSwap (ABoard: TBoard; AIdx1, AIdx2: Integer);
-    constructor CreateMessageDone (ABoard: TBoard);
+    constructor CreateMessageSwap(ABoard: TBoard; AIdx1, AIdx2: integer);
+    constructor CreateMessageDone(ABoard: TBoard);
   end;
 
   TBoard = class
+  const
+    MaxValue = 200;
   private
-    FData: TArray<Integer>;
-    function GetCount: Integer;
+    FData: TArray<integer>;
+    function GetCount: integer;
     procedure DoWait;
   public
     constructor Create;
-    procedure GenerateData(AItemsCnt: Integer);
-    procedure Swap(AIdx1, AIdx2: Integer);
+    procedure GenerateData(AItemsCnt: integer);
+    procedure Swap(AIdx1, AIdx2: integer);
     procedure SortBubble;
     procedure SortInsertion;
     procedure SortQuick;
-    property Count: Integer read GetCount;
-    property Data: TArray<Integer> read FData;
+    property Count: integer read GetCount;
+    property Data: TArray<integer> read FData;
   end;
 
   EBoardException = class(Exception);
@@ -45,16 +47,12 @@ var
     * Można przenieść do klasy TBoard (class var), ale to za mało
     * Trzeba przeanalizować zależności od FMessageQueue
     * Potrzebna lepsza nazwa }
-  FMessageQueue: TThreadedQueue <TSortMessage>;
+  FMessageQueue: TThreadedQueue<TSortMessage>;
 
 implementation
 
 uses
   Winapi.Windows;
-
-const
-  MaxValue = 200;
-
 
 constructor TBoard.Create;
 begin
@@ -64,9 +62,9 @@ begin
     FMessageQueue := TThreadedQueue<TSortMessage>.Create;
 end;
 
-procedure TBoard.GenerateData(AItemsCnt: Integer);
+procedure TBoard.GenerateData(AItemsCnt: integer);
 var
-  i: Integer;
+  i: integer;
 begin
   Randomize;
   if (AItemsCnt <= 0) then
@@ -76,21 +74,19 @@ begin
     FData[i] := Random(MaxValue) + 1;
 end;
 
-function TBoard.GetCount: Integer;
+function TBoard.GetCount: integer;
 begin
   Result := Length(FData);
 end;
 
-procedure TBoard.Swap(AIdx1, AIdx2: Integer);
+procedure TBoard.Swap(AIdx1, AIdx2: integer);
 var
-  v: Integer;
+  v: integer;
 begin
   v := FData[AIdx1];
   FData[AIdx1] := FData[AIdx2];
   FData[AIdx2] := v;
-  FMessageQueue.PushItem(
-    TSortMessage.CreateMessageSwap(Self, AIdx1, AIdx2)
-  );
+  FMessageQueue.PushItem(TSortMessage.CreateMessageSwap(Self, AIdx1, AIdx2));
   DoWait;
 end;
 
@@ -112,53 +108,49 @@ end;
 
 procedure TBoard.SortBubble;
 var
-  i: Integer;
-  j: Integer;
+  i: integer;
+  j: integer;
 begin
   for i := 0 to Count - 1 do
     for j := 0 to Count - 2 do
       if FData[j] > FData[j + 1] then
-        Swap (j, j+1);
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
+        Swap(j, j + 1);
+  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
-
 
 procedure TBoard.SortInsertion;
 var
-  i: Integer;
-  j: Integer;
-  mini: Integer;
-  minv: Integer;
+  i: integer;
+  j: integer;
+  mini: integer;
+  minv: integer;
 begin
-  for i := 0 to Length(data) - 1 do
+  for i := 0 to Length(Data) - 1 do
   begin
     mini := i;
-    minv := data[i];
-    for j := i + 1 to Length(data) - 1 do
+    minv := Data[i];
+    for j := i + 1 to Length(Data) - 1 do
     begin
-      if data[j] < minv then
+      if Data[j] < minv then
       begin
         mini := j;
-        minv := data[j];
+        minv := Data[j];
       end;
     end;
     if mini <> i then
-      swap(i, mini);
+      Swap(i, mini);
     // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
     // (np. po Thread.Terminate)
   end;
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
+  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
 
-
 procedure TBoard.SortQuick;
-  procedure qsort(idx1, idx2: Integer);
+  procedure qsort(idx1, idx2: integer);
   var
-    i: Integer;
-    j: Integer;
-    mediana: Integer;
+    i: integer;
+    j: integer;
+    mediana: integer;
   begin
     i := idx1;
     j := idx2;
@@ -185,20 +177,19 @@ procedure TBoard.SortQuick;
 
 begin
   qsort(0, Count - 1);
-  FMessageQueue.PushItem(
-  TSortMessage.CreateMessageDone(Self));
+  FMessageQueue.PushItem(TSortMessage.CreateMessageDone(Self));
 end;
-
 
 { TSortMessage }
 
-constructor TSortMessage.CreateMessageDone (ABoard: TBoard);
+constructor TSortMessage.CreateMessageDone(ABoard: TBoard);
 begin
   MessageType := mtDone;
   Board := ABoard;
 end;
 
-constructor TSortMessage.CreateMessageSwap(ABoard: TBoard; AIdx1, AIdx2: Integer);
+constructor TSortMessage.CreateMessageSwap(ABoard: TBoard;
+  AIdx1, AIdx2: integer);
 begin
   MessageType := mtSwap;
   Board := ABoard;
