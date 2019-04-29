@@ -85,6 +85,19 @@ object Form1: TForm1
       TabOrder = 2
       OnClick = Button3Click
     end
+    object Button4: TButton
+      AlignWithMargins = True
+      Left = 549
+      Top = 18
+      Width = 75
+      Height = 25
+      Align = alRight
+      Caption = 'Button4'
+      TabOrder = 3
+      OnClick = Button4Click
+      ExplicitLeft = 280
+      ExplicitTop = 16
+    end
   end
   object Timer1: TTimer
     Interval = 20

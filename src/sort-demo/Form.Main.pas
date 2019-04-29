@@ -21,12 +21,14 @@ type
     Button3: TButton;
     Timer1: TTimer;
     PaintBox3: TPaintBox;
+    Button4: TButton;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     BubbleSortControler: TSortControler;
     QuickSortControler: TSortControler;
@@ -60,9 +62,18 @@ begin
   InsertionSortControler.Execute;
 end;
 
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  BubbleSortControler.TerminateThread;
+  QuickSortControler.TerminateThread;
+  QuickSortControler.TerminateThread;
+end;
+
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  // EnableSorting := false;
+  CanClose := not(BubbleSortControler.IsBusy) and
+    not(QuickSortControler.IsBusy) and
+    not(InsertionSortControler.IsBusy);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

@@ -24,13 +24,15 @@ type
     FBoard: TBoard;
     FBoardView: IBoardView;
     FControlerThread: TSortThread;
-    procedure DoSort(ASortAlgorithm: TSortAlgorithm);
+    procedure DoSort;
   public
     constructor Create(ABoard: TBoard;  ABoardView: IBoardView);
     destructor Destroy; override;
     procedure Execute;
+    procedure TerminateThread;
     function DispatchBoardMessage(m: TBoardMessage): boolean;
-    property SortAlgorithm: TSortAlgorithm read FSortAlgorithm 
+    function IsBusy: boolean;
+    property SortAlgorithm: TSortAlgorithm read FSortAlgorithm
       write FSortAlgorithm;
   end;
 
@@ -65,18 +67,30 @@ begin
 end;
 
 
-procedure TSortControler.DoSort(ASortAlgorithm: TSortAlgorithm);
+function TSortControler.IsBusy: boolean;
+begin
+  Result := (FControlerThread <> nil);
+end;
+
+procedure TSortControler.TerminateThread;
+begin
+  if (FControlerThread <> nil) then begin
+    FControlerThread.Terminate;
+  end;
+end;
+
+procedure TSortControler.DoSort;
 var
   StopWatch: TStopwatch;
   AName: string;
 begin
-  FSortAlgorithm := ASortAlgorithm;
+  // FSortAlgorithm := ASortAlgorithm;
   StopWatch := TStopwatch.StartNew;
   AName := GetAlgorithmName();
   FControlerThread := TSortThread.CreateAndInit( AName,
     procedure
     begin
-      case ASortAlgorithm of
+      case FSortAlgorithm of
         saBubbleSort:
           FBoard.SortBubble;
         saQuickSort:
@@ -89,6 +103,7 @@ begin
     end,
     procedure
     begin
+      FControlerThread := nil;
       FElapsedTime := StopWatch.Elapsed;
       FMessageQueue.PushItem(TBoardMessage.CreateMessageDone(FBoard));
     end);
@@ -98,7 +113,7 @@ procedure TSortControler.Execute;
 begin
   FBoard.GenerateData(FBoardView.CountVisibleItems);
   FBoardView.DrawBoard;
-  DoSort(FSortAlgorithm);
+  DoSort();
 end;
 
 function TSortControler.DispatchBoardMessage(m: TBoardMessage): boolean;
