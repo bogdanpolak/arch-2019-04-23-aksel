@@ -58,10 +58,9 @@ object Form1: TForm1
       Top = 18
       Width = 116
       Height = 25
+      Action = actStartBubbleSort
       Align = alLeft
-      Caption = 'Button1'
       TabOrder = 0
-      OnClick = Button1Click
     end
     object Button2: TButton
       AlignWithMargins = True
@@ -69,10 +68,9 @@ object Form1: TForm1
       Top = 18
       Width = 116
       Height = 25
+      Action = actStartQuickSort
       Align = alLeft
-      Caption = 'Button2'
       TabOrder = 1
-      OnClick = Button2Click
     end
     object Button3: TButton
       AlignWithMargins = True
@@ -80,23 +78,19 @@ object Form1: TForm1
       Top = 18
       Width = 120
       Height = 25
+      Action = actStartInsertionSort
       Align = alLeft
-      Caption = 'Button3'
       TabOrder = 2
-      OnClick = Button3Click
     end
     object Button4: TButton
       AlignWithMargins = True
-      Left = 549
+      Left = 496
       Top = 18
-      Width = 75
+      Width = 128
       Height = 25
+      Action = actTermianteAll
       Align = alRight
-      Caption = 'Button4'
       TabOrder = 3
-      OnClick = Button4Click
-      ExplicitLeft = 280
-      ExplicitTop = 16
     end
   end
   object Timer1: TTimer
@@ -104,5 +98,25 @@ object Form1: TForm1
     OnTimer = Timer1Timer
     Left = 168
     Top = 136
+  end
+  object ActionList1: TActionList
+    Left = 264
+    Top = 136
+    object actStartBubbleSort: TAction
+      Caption = 'Start BubbleSort'
+      OnExecute = actStartBubbleSortExecute
+    end
+    object actStartQuickSort: TAction
+      Caption = 'Start QuickSort'
+      OnExecute = actStartQuickSortExecute
+    end
+    object actStartInsertionSort: TAction
+      Caption = 'Start InsertionSort'
+      OnExecute = actStartInsertionSortExecute
+    end
+    object actTermianteAll: TAction
+      Caption = 'Termiante All'
+      OnExecute = actTermianteAllExecute
+    end
   end
 end
