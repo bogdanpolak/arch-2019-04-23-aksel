@@ -6,7 +6,7 @@ unit Model.Board;
 interface
 
 uses
-  System.SysUtils, System.Generics.Collections;
+  System.Classes, System.SysUtils, System.Generics.Collections;
 
 type
   TMessageType = (mtSwap, mtDone);
@@ -105,7 +105,7 @@ end;
 
 procedure TBoard.DoWait;
 begin
-  WaitMilisecond(4.5);
+  WaitMilisecond(54.5);
 end;
 
 procedure TBoard.SortBubble;
@@ -114,9 +114,12 @@ var
   j: integer;
 begin
   for i := 0 to Count - 1 do
-    for j := 0 to Count - 2 do
+    for j := 0 to Count - 2 do begin
       if FData[j] > FData[j + 1] then
         Swap(j, j + 1);
+      if TThread.Current.CheckTerminated then
+        exit;
+    end;
 end;
 
 procedure TBoard.SortInsertion;
@@ -138,10 +141,10 @@ begin
         minv := Data[j];
       end;
     end;
+    if TThread.Current.CheckTerminated then
+      exit;
     if mini <> i then
       Swap(i, mini);
-    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
-    // (np. po Thread.Terminate)
   end;
 end;
 
@@ -160,6 +163,8 @@ procedure TBoard.SortQuick;
         inc(i);
       while mediana < Data[j] do
         dec(j);
+      if TThread.Current.CheckTerminated then
+        exit;
       if i <= j then
       begin
         Swap(i, j);
@@ -167,8 +172,6 @@ procedure TBoard.SortQuick;
         dec(j);
       end;
     until i > j;
-    // TODO: Brakuje sprawdzenia czy przy przerwać algorytm
-    // (np. po Thread.Terminate)
     if idx1 < j then
       qsort(idx1, j);
     if i < idx2 then
