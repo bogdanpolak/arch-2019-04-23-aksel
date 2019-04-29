@@ -49,9 +49,6 @@ end;
 
 destructor TSortControler.Destroy;
 begin
-  if (FControlerThread <> nil) and FControlerThread.IsRunning then begin
-    FControlerThread.Terminate;
-  end;
   inherited;
 end;
 

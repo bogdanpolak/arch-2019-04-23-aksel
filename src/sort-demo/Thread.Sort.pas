@@ -12,7 +12,7 @@ uses
 type
   TSortThread = class(TThread)
   private
-    FRunning: Boolean;
+    FThreadName: string;
     FSortProc: TProc;
     FOnSortFinished: TProc;
   protected
@@ -20,8 +20,6 @@ type
   public
     constructor CreateAndInit(const AThreadName: string; ASortProc: TProc;
       AOnSortFinished: TProc);
-    function IsTerminated: Boolean;
-    function IsRunning: Boolean;
   end;
 
 implementation
@@ -30,7 +28,7 @@ constructor TSortThread.CreateAndInit(const AThreadName: string;
   ASortProc: TProc; AOnSortFinished: TProc);
 begin
   inherited Create(False);
-  NameThreadForDebugging(AThreadName);
+  FThreadName := AThreadName;
   FreeOnTerminate := True;
   FSortProc := ASortProc;
   FOnSortFinished := AOnSortFinished;
@@ -38,23 +36,11 @@ end;
 
 procedure TSortThread.Execute;
 begin
-  FRunning := True;
+  NameThreadForDebugging(FThreadName);
   if Assigned(FSortProc) then
     FSortProc;
   if Assigned(FOnSortFinished) then
-    if not IsTerminated then
-      FOnSortFinished;
-  FRunning := False;
-end;
-
-function TSortThread.IsRunning: Boolean;
-begin
-  Result := FRunning and not Terminated;
-end;
-
-function TSortThread.IsTerminated: Boolean;
-begin
-  Result := Self.Terminated;
+    FOnSortFinished;
 end;
 
 end.

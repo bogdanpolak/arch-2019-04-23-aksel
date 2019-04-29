@@ -7,7 +7,7 @@ uses
   Model.Board in 'Model.Board.pas',
   View.Board in 'View.Board.pas',
   Controler.Sort in 'Controler.Sort.pas',
-  Thread.SortControler in 'Thread.SortControler.pas',
+  Thread.Sort in 'Thread.Sort.pas',
   View.Vcl.Board in 'View.Vcl.Board.pas',
   Manager.Sort in 'Manager.Sort.pas';
 
