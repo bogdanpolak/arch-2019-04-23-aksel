@@ -10,18 +10,20 @@ uses
   Vcl.ExtCtrls,
   Model.Board,
   View.Board,
-  Thread.SortControler;
+  Thread.Sort;
 
 type
   TSortAlgorithm = (saBubbleSort, saQuickSort, saInsertionSort);
 
   TSortControler = class
+  private
+    function GetAlgorithmName: string;
   protected
     FElapsedTime: TTimeSpan;
     FSortAlgorithm: TSortAlgorithm;
     FBoard: TBoard;
     FBoardView: IBoardView;
-    FControlerThread: TSortControlerThread;
+    FControlerThread: TSortThread;
     procedure DoSort(ASortAlgorithm: TSortAlgorithm);
   public
     constructor Create(ABoard: TBoard;  ABoardView: IBoardView);
@@ -53,13 +55,28 @@ begin
   inherited;
 end;
 
+function TSortControler.GetAlgorithmName: string;
+begin
+    case FSortAlgorithm of
+      saBubbleSort:
+        Result := 'Bubble Sort';
+      saQuickSort:
+        Result := 'Quick Sort';
+      saInsertionSort:
+        Result := 'Insertion Sort';
+    end;
+end;
+
+
 procedure TSortControler.DoSort(ASortAlgorithm: TSortAlgorithm);
 var
   StopWatch: TStopwatch;
+  AName: string;
 begin
   FSortAlgorithm := ASortAlgorithm;
   StopWatch := TStopwatch.StartNew;
-  FControlerThread := TSortControlerThread.CreateAndInit(
+  AName := GetAlgorithmName();
+  FControlerThread := TSortThread.CreateAndInit( AName,
     procedure
     begin
       case ASortAlgorithm of
@@ -93,14 +110,7 @@ var
 begin
   Result := (FBoard = m.Board);
   if Result then begin
-    case FSortAlgorithm of
-      saBubbleSort:
-        AName := 'Bubble Sort';
-      saQuickSort:
-        AName := 'Quick Sort';
-      saInsertionSort:
-        AName := 'Insertion Sort';
-    end;
+    AName := GetAlgorithmName();
     case m.MessageType of
       mtSwap:
         begin
