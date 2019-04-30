@@ -105,7 +105,7 @@ end;
 
 procedure TBoard.DoWait;
 begin
-  WaitMilisecond(54.5);
+  WaitMilisecond(4.5);
 end;
 
 procedure TBoard.SortBubble;

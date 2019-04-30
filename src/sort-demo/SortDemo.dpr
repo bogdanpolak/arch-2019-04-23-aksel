@@ -4,12 +4,12 @@ uses
   Vcl.Forms,
   Form.Main in 'Form.Main.pas' {Form1},
   Colors.Hsl in 'Colors.Hsl.pas',
-  Model.Board in 'Model.Board.pas',
-  View.Board in 'View.Board.pas',
   Controler.Sort in 'Controler.Sort.pas',
+  Manager.Sort in 'Manager.Sort.pas',
+  Model.Board in 'Model.Board.pas',
   Thread.Sort in 'Thread.Sort.pas',
-  View.Vcl.Board in 'View.Vcl.Board.pas',
-  Manager.Sort in 'Manager.Sort.pas';
+  View.Board in 'View.Board.pas',
+  View.Vcl.Board in 'View.Vcl.Board.pas';
 
 {$R *.res}
 
