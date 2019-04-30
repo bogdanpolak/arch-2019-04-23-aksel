@@ -16,7 +16,9 @@ uses
   Controler.Sort in '..\..\src\sort-demo\Controler.Sort.pas',
   Thread.Sort in '..\..\src\sort-demo\Thread.Sort.pas',
   View.Board in '..\..\src\sort-demo\View.Board.pas',
-  TestBoard in 'TestBoard.pas';
+  TestBoard in 'TestBoard.pas',
+  TestSortControler in 'TestSortControler.pas',
+  Mock.BoardView in 'Mock.BoardView.pas';
 
 {$R *.RES}
 
