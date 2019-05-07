@@ -165,9 +165,16 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
+var
+  idx: Integer;
 begin
   // TODO: [TeamA] Sprawdź czy sortowanie zadziała poprawnie dla pustego
   // TODO: [TeamD] j.w. = takie same zadanie
+
+  GenerateData(50);
+  for idx := 0 to FBoard.Count - 1 do
+    CheckTrue((FBoard.Data[idx] >= 1) and (FBoard.Data[idx] <= FBoard.MaxValue), Format('Wygenerowano dane przekraczające wyznaczony zakres 1 - %d (wygenerowano: %d)', [FBoard.MaxValue, FBoard.Data[idx]]));
+
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
