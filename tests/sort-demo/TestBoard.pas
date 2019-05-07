@@ -124,9 +124,35 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_312;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
 begin
-  //  TODO: [TeamC] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  { [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
+      bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie }
+  localBoard := TBoard.Create;
+  localBoard.GenerateData(3);
+  localBoard.Data[0] := 3;
+  localBoard.Data[1] := 1;
+  localBoard.Data[2] := 2;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    localBoard.SortBubble;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+
+  while not stopped do
+    sleep(10);
+
+  CheckTrue(localBoard.Data[0] = 1, 'Źle posortowana tabela bubble sort (idx: 0 -> should be 1 but is localBoard.Data[0])');
+  CheckTrue(localBoard.Data[1] = 2, 'Źle posortowana tabela bubble sort (idx: 1 -> should be 2 but is localBoard.Data[1])');
+  CheckTrue(localBoard.Data[2] = 3, 'Źle posortowana tabela bubble sort (idx: 2 -> should be 3 but is localBoard.Data[2])');
+
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortBubble_111;
