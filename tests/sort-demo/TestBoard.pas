@@ -115,9 +115,20 @@ begin
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
+var
+  wasException: Boolean;
 begin
   // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
   //   rzuca wyjątkiem
+  wasException := False;
+  GenerateData(10);
+  try
+    FBoard.Swap(56, 47);
+  except
+    on E: EArgumentOutOfRangeException do
+      wasException := True;
+  end;
+  CheckTrue(wasException, 'Swap elementów poza rozmiarem tablicy nie wygenerował wyjątku');
 end;
 
 procedure TestTBoard.TestSortBubble_123;
