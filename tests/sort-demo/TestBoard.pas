@@ -15,7 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
-    procedure GenerateData(AItemsCount: Integer);
+    procedure GenerateData(AItemsCount: Integer; AItems: TArray<Integer> = []);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -66,9 +66,14 @@ begin
 
 end;
 
-procedure TestTBoard.GenerateData(AItemsCount: Integer);
+procedure TestTBoard.GenerateData(AItemsCount: Integer; AItems: TArray<Integer> = []);
+var
+  idx: Integer;
 begin
   FBoard.GenerateData(AItemsCount);
+  if Length(AItems) <= FBoard.Count then
+    for idx := 0 to Length(AItems) - 1 do
+      FBoard.Data[idx] := AItems[idx];
 end;
 
 procedure TestTBoard.TestGenerateZeroData;
