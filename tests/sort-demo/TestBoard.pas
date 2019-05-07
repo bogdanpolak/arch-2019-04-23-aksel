@@ -220,10 +220,31 @@ begin
 end;
 
 procedure TestTBoard.TestSortQuick_321;
+var
+  myThread: TThread;
+  done: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
+  FBoard.GenerateData(3);
+  FBoard.Data[0] := 3;
+  FBoard.Data[1] := 2;
+  FBoard.Data[2] := 1;
+  done := False;
+  myThread := TThread.CreateAnonymousThread(procedure
+  begin
+    FBoard.SortQuick;
+    done := True;
+  end);
+  myThread.FreeOnTerminate := True;
+  myThread.Start;
+  while not done do
+    sleep(10);
+
+  CheckEquals(1, FBoard.Data[0], 'Nieprawidłowa wartość danych w tabeli na idx = 0');
+  CheckEquals(2, FBoard.Data[1], 'Nieprawidłowa wartość danych w tabeli na idx = 1');
+  CheckEquals(3, FBoard.Data[2], 'Nieprawidłowa wartość danych w tabeli na idx = 2');
 end;
 
 initialization
