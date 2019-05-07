@@ -59,11 +59,12 @@ var
   done: Boolean;
 begin
   done := False;
-  sortThread := TThread.CreateAnonymousThread(procedure
-  begin
-    AProc;
-    done := True;
-  end);
+  sortThread := TThread.CreateAnonymousThread(
+    procedure
+    begin
+      AProc;
+      done := True;
+    end);
   sortThread.FreeOnTerminate := True;
   sortThread.Start;
   while not done do
@@ -80,7 +81,8 @@ var
   idx: Integer;
 begin
   for idx := 0 to Length(AExpectedData) - 1 do
-    CheckEquals(AExpectedData[idx], FBoard.Data[idx], 'Nieprawidłowa wartość danych w tabeli na idx = ' + idx.ToString);
+    CheckEquals(AExpectedData[idx], FBoard.Data[idx],
+      'Nieprawidłowa wartość danych w tabeli na idx = ' + idx.ToString);
 end;
 
 procedure TestTBoard.TearDown;
@@ -96,7 +98,7 @@ begin
   (*
     Self.CheckEquals (expected, actual, msg)
     - sprawdza czy actual = expected i jeśli nie jest to zwraca negatywny
-      wynik testu
+    wynik testu
     - tylko w przyapdku negatywnego wyniku wyświetalny jest komunikat msg
   *)
 
@@ -124,7 +126,8 @@ begin
   *)
   Self.StartExpectingException(EBoardException);
   FBoard.GenerateData(-3);
-  Self.StopExpectingException('Powinien wystąpić błąd: "Zła liczba danych do generacji"');
+  Self.StopExpectingException
+    ('Powinien wystąpić błąd: "Zła liczba danych do generacji"');
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
@@ -151,19 +154,19 @@ end;
 procedure TestTBoard.TestSwapOutOfRangeIndex;
 begin
   // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
-  //   rzuca wyjątkiem
+  // rzuca wyjątkiem
 end;
 
 procedure TestTBoard.TestSortBubble_123;
 begin
-  //  TODO: [TeamA] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  // TODO: [TeamA] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
+  // bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
 end;
 
 procedure TestTBoard.TestSortBubble_312;
 begin
-  //  TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  // TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
+  // bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
   UstawDaneWBoard([3, 1, 2]);
 
   WykonajSortowanie(
@@ -177,8 +180,8 @@ end;
 
 procedure TestTBoard.TestSortBubble_111;
 begin
-  //  TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  // TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
+  // bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
 end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
@@ -187,7 +190,7 @@ var
   error: Boolean;
 begin
   // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
+  // zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
   tmpBoard := TBoard.Create;
 
   WykonajSortowanie(
@@ -201,7 +204,8 @@ begin
       end;
     end);
 
-  CheckFalse(error, 'Wystąpił wyjątek przy sortowaniu babelkowym pustej tablicy');
+  CheckFalse(error,
+    'Wystąpił wyjątek przy sortowaniu babelkowym pustej tablicy');
 
   tmpBoard.Free;
 end;
