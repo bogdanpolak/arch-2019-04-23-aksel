@@ -162,9 +162,32 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
+  exception: Boolean;
 begin
-  // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
+  { [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
+     zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek }
+  localBoard := TBoard.Create;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    exception := False;
+    try
+      localBoard.SortBubble;
+    except
+      exception := True;
+    end;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+  while not stopped do
+    sleep(10);
+  CheckFalse(exception, 'Pojawił się wyjątek - sortowaniu babelkowym - pusta tablica, a nie powinien');
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
