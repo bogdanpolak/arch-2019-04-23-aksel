@@ -15,6 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
+    procedure GenerateData(AItemsCount: Integer);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -65,6 +66,11 @@ begin
 
 end;
 
+procedure TestTBoard.GenerateData(AItemsCount: Integer);
+begin
+  FBoard.GenerateData(AItemsCount);
+end;
+
 procedure TestTBoard.TestGenerateZeroData;
 begin
   // TODO: [TeamA] Zweyfikuj działanie grerate dla 0
@@ -76,6 +82,10 @@ begin
     3. Zweryfikuj czy Count = 0
     4. Zweryfikuj czy Length(Data)=0
   *)
+  GenerateData(100);
+  GenerateData(0);
+  CheckEquals(0, FBoard.Count, 'Nieodpowiednia ilość danych - count');
+  CheckEquals(0, Length(FBoard.Data), 'Nieodpowiednia ilość danych - length');
 end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
