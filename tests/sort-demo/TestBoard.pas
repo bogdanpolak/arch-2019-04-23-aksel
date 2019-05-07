@@ -220,7 +220,32 @@ begin
 end;
 
 procedure TestTBoard.TestSortQuick_321;
+var
+  thread: TThread;
+  board: TBoard;
+  ended: Boolean;
 begin
+  board := TBoard.Create;
+  board.GenerateData(3);
+  board.Data[0] := 3;
+  board.Data[1] := 2;
+  board.Data[2] := 1;
+  ended := False;
+
+  thread := TThread.CreateAnonymousThread(procedure
+  begin
+    board.SortQuick;
+    ended := True;
+  end);
+  thread.FreeOnTerminate := True;
+  thread.Start;
+
+  while not ended do
+    sleep(1);
+
+  CheckEquals(1, board.Data[0], 'Pierwsza dana niepoprawna');
+  CheckEquals(2, board.Data[1], 'Druga dana niepoprawna');
+  CheckEquals(3, board.Data[2], 'Trzecia dana niepoprawna');
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
