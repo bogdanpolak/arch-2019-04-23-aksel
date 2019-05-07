@@ -109,7 +109,18 @@ begin
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
+var
+  myExcept: Boolean;
 begin
+  myExcept := False;
+  FBoard.GenerateData(5);
+  try
+    FBoard.Swap(6,7);
+  except
+    on E: EBoardException do
+      myExcept := True;
+  end;
+  Check(myExcept, 'Brak wyjątku podczas swap poza zakresem')
   // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
   //   rzuca wyjątkiem
 end;
