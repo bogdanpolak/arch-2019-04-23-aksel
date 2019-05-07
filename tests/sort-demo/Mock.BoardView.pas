@@ -27,6 +27,10 @@ type
     function CountVisibleItems: Integer;
   end;
 
+var
+  HaveResult: Boolean = False;
+  DrawItemCnt: Integer = 0;
+
 implementation
 
 { TBoardViewMock }
@@ -43,13 +47,13 @@ end;
 
 procedure TBoardViewMock.DrawItem(AIndex: Integer);
 begin
-  { do nothing }
+  Inc(DrawItemCnt);
 end;
 
 procedure TBoardViewMock.DrawResults(const AAlgoritmName: string;
   AElapsedTime: TTimeSpan);
 begin
-  { do nothing }
+  HaveResult := True;
 end;
 
 end.

@@ -38,6 +38,7 @@ uses
 procedure TestTSortControler.SetUp;
 begin
   FBoard := TBoard.Create;
+
   // TODO: Stworzyć FSortControler
   // w tym celu potrzebny jest obiekt, który implementuje inteface IBoardView
   // Proszę stworzyć tzw. zaślepkęm, czyki Mock, kótrzy prawie
@@ -45,6 +46,9 @@ begin
   // Mock prosze zdefinować w unit: Mock.BoardView.pas
 
   FSortControler := TSortControler.Create(FBoard, TBoardViewMock.Create);
+
+  HaveResult := False;
+  DrawItemCnt := 0;
 end;
 
 procedure TestTSortControler.TearDown;
@@ -133,11 +137,42 @@ begin
 end;
 
 procedure TestTSortControler.TestDispatchBoardMessage;
+var
+  boardMess: TBoardMessage;
+  stamp: Cardinal;
+  done: Boolean;
+  messPopedCnt: Integer;
 begin
   // TODO: Sprawdzić czy po dodanu do kolejki FMessageQueue (w Model.Board.pas)
   // kilku komunikatów Swap zostaną oe poprawnie obsłużone przez metodę
   // DispatchBoardMessage
 
+  FSortControler.Execute;
+
+  stamp := GetTickCount;
+  done := False;
+
+  while (not done) and (TicksBetweenNow(stamp) div 1000 < 1) do
+  begin
+    Sleep(10);
+    messPopedCnt := 0;
+    while FMessageQueue.QueueSize > 0 do
+    begin
+      boardMess := FMessageQueue.PopItem;
+      FSortControler.DispatchBoardMessage(boardMess);
+      if boardMess.MessageType = mtDone then
+      begin
+        done := True;
+        Break;
+      end;
+      Inc(messPopedCnt);
+      if messPopedCnt >= 0 then
+        Break;
+    end;
+  end;
+
+  CheckTrue(HaveResult, 'Nie było DrawResult');
+  CheckEquals(FBoard.FSwapCounter, DrawItemCnt / 2, 'Nieprawidłowa liczba wywołań DrawItem');
 end;
 
 initialization
