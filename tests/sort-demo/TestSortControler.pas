@@ -30,6 +30,7 @@ type
 implementation
 
 uses
+  Winapi.Windows,
   View.Board,
   Mock.BoardView;
 
@@ -37,21 +38,19 @@ procedure TestTSortControler.SetUp;
 begin
   FBoard := TBoard.Create;
   // TODO: Stworzyć FSortControler
-  //   w tym celu potrzebny jest obiekt, który implementuje inteface IBoardView
-  //   Proszę stworzyć tzw. zaślepkęm, czyki Mock, kótrzy prawie
-  //   W mocku potrzebne będzie zwracanie liczby widocznych danych
-  //   Mock prosze zdefinować w unit: Mock.BoardView.pas
-  (*
+  // w tym celu potrzebny jest obiekt, który implementuje inteface IBoardView
+  // Proszę stworzyć tzw. zaślepkęm, czyki Mock, kótrzy prawie
+  // W mocku potrzebne będzie zwracanie liczby widocznych danych
+  // Mock prosze zdefinować w unit: Mock.BoardView.pas
+
   FSortControler := TSortControler.Create(FBoard, TBoardViewMock.Create);
-  *)
 end;
 
 procedure TestTSortControler.TearDown;
 begin
-  (*
   FSortControler.Free;
   FSortControler := nil;
-  *)
+
   FBoard.Free;
   FBoard := nil;
 end;
@@ -96,6 +95,7 @@ begin
   // TODO: Sprawdzić czy po dodanu do kolejki FMessageQueue (w Model.Board.pas)
   // kilku komunikatów Swap zostaną oe poprawnie obsłużone przez metodę
   // DispatchBoardMessage
+
 end;
 
 initialization
