@@ -124,9 +124,30 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_312;
+var
+  myThread: TThread;
+  done: Boolean;
 begin
-  //  TODO: [TeamC] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
+  //  TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  FBoard.GenerateData(3);
+  FBoard.Data[0] := 3;
+  FBoard.Data[1] := 1;
+  FBoard.Data[2] := 2;
+  done := False;
+  myThread := TThread.CreateAnonymousThread(procedure
+  begin
+    FBoard.SortBubble;
+    done := True;
+  end);
+  myThread.FreeOnTerminate := True;
+  myThread.Start;
+  while not done do
+    sleep(10);
+
+  CheckEquals(1, FBoard.Data[0], 'Nieprawidłowa wartość danych w tabeli na idx = 0');
+  CheckEquals(2, FBoard.Data[1], 'Nieprawidłowa wartość danych w tabeli na idx = 1');
+  CheckEquals(3, FBoard.Data[2], 'Nieprawidłowa wartość danych w tabeli na idx = 2');
 end;
 
 procedure TestTBoard.TestSortBubble_111;
