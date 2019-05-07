@@ -15,6 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
+    function CreateLocalBoard321: TBoard;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -40,6 +41,15 @@ type
   end;
 
 implementation
+
+function TestTBoard.CreateLocalBoard321: TBoard;
+begin
+  Result := TBoard.Create;
+  Result.GenerateData(3);
+  Result.Data[0] := 3;
+  Result.Data[1] := 2;
+  Result.Data[2] := 1;
+end;
 
 procedure TestTBoard.SetUp;
 begin
@@ -129,13 +139,9 @@ var
   localBoard: TBoard;
   stopped: Boolean;
 begin
-  { [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
+  { [TeamC] wypełnij tablicę danymi [3, 2, 1] uruchom sortowanie
       bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie }
-  localBoard := TBoard.Create;
-  localBoard.GenerateData(3);
-  localBoard.Data[0] := 3;
-  localBoard.Data[1] := 1;
-  localBoard.Data[2] := 2;
+  localBoard := CreateLocalBoard321;
   stopped := False;
   localThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -205,11 +211,7 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
   { [TeamC] j.w. }
   // TODO: [TeamD] j.w.
-  localBoard := TBoard.Create;
-  localBoard.GenerateData(3);
-  localBoard.Data[0] := 3;
-  localBoard.Data[1] := 2;
-  localBoard.Data[2] := 1;
+  localBoard := CreateLocalBoard321;
   stopped := False;
   localThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -238,11 +240,7 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   { [TeamC] j.w. }
   // TODO: [TeamD] j.w.
-  localBoard := TBoard.Create;
-  localBoard.GenerateData(3);
-  localBoard.Data[0] := 3;
-  localBoard.Data[1] := 2;
-  localBoard.Data[2] := 1;
+  localBoard := CreateLocalBoard321;
   stopped := False;
   localThread := TThread.CreateAnonymousThread(procedure
   begin
