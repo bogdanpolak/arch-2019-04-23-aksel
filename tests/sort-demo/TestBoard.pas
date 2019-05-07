@@ -175,6 +175,12 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
+  GenerateData(3, [3, 2, 1]);
+  FBoard.SortInsertion;
+  CheckEquals(1, FBoard.FSwapCounter, 'Niepoprawna ilość swapów');
+  CheckEquals(1, FBoard.Data[0], 'Pierwszy element jest błędny');
+  CheckEquals(2, FBoard.Data[1], 'Drugi element jest błędny');
+  CheckEquals(3, FBoard.Data[2], 'Trzeci element jest błędny');
 end;
 
 procedure TestTBoard.TestSortQuick_321;
