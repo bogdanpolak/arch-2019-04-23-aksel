@@ -67,6 +67,10 @@ end;
 
 procedure TestTBoard.TestGenerateZeroData;
 begin
+  FBoard.GenerateData(15);
+  FBoard.GenerateData(0);
+  CheckEquals(0, FBoard.Count, 'Nieodpowiednia liczba danych');
+  CheckEquals(0, Length(FBoard.Data), 'Nieodpowiednia długość danych');
   // TODO: [TeamA] Zweyfikuj działanie grerate dla 0
   // TODO: [TeamD]  j.w. = takie same zadanie
   (*
