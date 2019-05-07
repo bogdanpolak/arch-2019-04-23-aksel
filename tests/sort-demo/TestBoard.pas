@@ -85,6 +85,9 @@ begin
     Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
     Zobacz w żródłach: TestFramework.pas
   *)
+  Self.StartExpectingException(EBoardException);
+  FBoard.GenerateData(-3);
+  Self.StopExpectingException('Powinien wystąpić błąd: "Zła liczba danych do generacji"');
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
