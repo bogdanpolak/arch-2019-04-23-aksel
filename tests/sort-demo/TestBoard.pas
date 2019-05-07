@@ -175,7 +175,14 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
+var
+  idx: Integer;
 begin
+  //Patrząc na nazwę procedury mam tu sprawdzić czy 50 losowych licz jest z zakresu od 1 do max
+  FBoard.GenerateData(50);
+  for idx := 0 to FBoard.Count - 1 do
+    if not((FBoard.Data[idx] >= 1) and (FBoard.Data[idx] <= FBoard.MaxValue)) then
+      CheckTrue(False, Format('Niepoprawna liczba jest %d powinna być z zakresu od 1 do %d', [FBoard.Data[idx], FBoard.MaxValue]));
   // TODO: [TeamA] Sprawdź czy sortowanie zadziała poprawnie dla pustego
   // TODO: [TeamD] j.w. = takie same zadanie
 end;
