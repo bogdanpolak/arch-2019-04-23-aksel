@@ -18,6 +18,7 @@ type
   strict private
     FBoard: TBoard;
     FSortControler: TSortControler;
+    function TicksBetweenNow(AStartTicks: Cardinal): Cardinal;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -56,6 +57,11 @@ begin
 end;
 
 procedure TestTSortControler.TestExecute;
+var
+  stamp: Cardinal;
+  messPopedCnt: Integer;
+  boardMess: TBoardMessage;
+  done: Boolean;
 begin
   // TODO: Sprawdzić metodę TSortControler.Execute
   (*
@@ -76,6 +82,31 @@ begin
     tą "czarną owcę" w TBoard. Prosze tutaj poniżej niapisać co to jest.
     Proszę nie poprawiać błędów w TBoard.
   *)
+
+  FSortControler.Execute;
+
+  stamp := GetTickCount;
+  done := False;
+
+  while (not done) and (TicksBetweenNow(stamp) div 1000 < 1) do
+  begin
+    Sleep(10);
+    messPopedCnt := 0;
+    while FMessageQueue.QueueSize > 0 do
+    begin
+      boardMess := FMessageQueue.PopItem;
+      if boardMess.MessageType = mtDone then
+      begin
+        done := True;
+        Break;
+      end;
+      Inc(messPopedCnt);
+      if messPopedCnt >= 0 then
+        Break;
+    end;
+  end;
+
+  CheckTrue(done, 'Sortowanie nie zostało zakończone, timeout');
 end;
 
 procedure TestTSortControler.TestTerminateThread;
@@ -88,6 +119,17 @@ begin
     po odczekaniu krótkiego czasu (15ms) powinen przerywać działanie wątku
     roboczego (metoda: TSortControler.TerminateThread.
   *)
+end;
+
+function TestTSortControler.TicksBetweenNow(AStartTicks: Cardinal): Cardinal;
+var
+  stopTicks: Cardinal;
+begin
+  stopTicks := GetTickCount;
+  if stopTicks >= AStartTicks then
+    Result := stopTicks - AStartTicks
+  else
+    Result := High(Cardinal) - AStartTicks + stopTicks + 1;
 end;
 
 procedure TestTSortControler.TestDispatchBoardMessage;
