@@ -6,7 +6,7 @@ unit TestBoard;
 interface
 
 uses
-  System.Generics.Collections, System.SysUtils, System.Classes,
+  System.Generics.Collections, System.SysUtils, System.Classes, System.SyncObjs,
   TestFramework,
   Model.Board;
 
@@ -14,8 +14,10 @@ type
   TestTBoard = class(TTestCase)
   strict private
     FBoard: TBoard;
+    FEvent: TEvent;
   private
     procedure GenerateData(AItemsCount: Integer; AItems: TArray<Integer> = []);
+    procedure CreateAndStartSortThread(AProc: TProc);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -45,12 +47,15 @@ implementation
 procedure TestTBoard.SetUp;
 begin
   FBoard := TBoard.Create;
+  FEvent := TEvent.Create;
 end;
 
 procedure TestTBoard.TearDown;
 begin
   FBoard.Free;
   FBoard := nil;
+  FEvent.Free;
+  FEvent := nil;
 end;
 
 procedure TestTBoard.TestGenerate10Data;
@@ -153,8 +158,8 @@ begin
   //  TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
   GenerateData(3, [1,1,1]);
-  FBoard.SortBubble;
-
+  CreateAndStartSortThread(FBoard.SortBubble);
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
   CheckEquals(0, FBoard.FSwapCounter, 'Wykonano conajmniej jedną zmianę tych samych elementów');
 end;
 
@@ -174,7 +179,16 @@ begin
   GenerateData(50);
   for idx := 0 to FBoard.Count - 1 do
     CheckTrue((FBoard.Data[idx] >= 1) and (FBoard.Data[idx] <= FBoard.MaxValue), Format('Wygenerowano dane przekraczające wyznaczony zakres 1 - %d (wygenerowano: %d)', [FBoard.MaxValue, FBoard.Data[idx]]));
+end;
 
+procedure TestTBoard.CreateAndStartSortThread(AProc: TProc);
+begin
+  TThread.CreateAnonymousThread(
+    procedure
+    begin
+      AProc;
+      FEvent.SetEvent;
+    end).Start;
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
@@ -183,7 +197,9 @@ begin
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   GenerateData(3, [3, 2, 1]);
-  FBoard.SortInsertion;
+  CreateAndStartSortThread(FBoard.SortInsertion);
+
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
   CheckEquals(1, FBoard.FSwapCounter, 'Niepoprawna ilość swapów');
   CheckEquals(1, FBoard.Data[0], 'Pierwszy element jest błędny');
   CheckEquals(2, FBoard.Data[1], 'Drugi element jest błędny');
@@ -196,7 +212,9 @@ begin
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   GenerateData(3, [3, 2, 1]);
-  FBoard.SortQuick;
+  CreateAndStartSortThread(FBoard.SortQuick);
+
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
   CheckEquals(2, FBoard.FSwapCounter, 'Niepoprawna ilość swapów');
   CheckEquals(1, FBoard.Data[0], 'Pierwszy element jest błędny');
   CheckEquals(2, FBoard.Data[1], 'Drugi element jest błędny');
