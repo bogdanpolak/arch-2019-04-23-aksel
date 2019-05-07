@@ -197,10 +197,36 @@ begin
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
-  // TODO: [TeamC] j.w.
+  { [TeamC] j.w. }
   // TODO: [TeamD] j.w.
+  localBoard := TBoard.Create;
+  localBoard.GenerateData(3);
+  localBoard.Data[0] := 3;
+  localBoard.Data[1] := 2;
+  localBoard.Data[2] := 1;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    localBoard.SortInsertion;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+
+  while not stopped do
+    sleep(10);
+
+  CheckTrue(localBoard.Data[0] = 1, 'Źle posortowana tabela insertion sort (idx: 0 -> should be 1 but is localBoard.Data[0])');
+  CheckTrue(localBoard.Data[1] = 2, 'Źle posortowana tabela insertion sort (idx: 1 -> should be 2 but is localBoard.Data[1])');
+  CheckTrue(localBoard.Data[2] = 3, 'Źle posortowana tabela insertion sort (idx: 2 -> should be 3 but is localBoard.Data[2])');
+
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortQuick_321;
