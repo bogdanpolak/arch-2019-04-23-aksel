@@ -137,9 +137,36 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_123;
+var
+  myBoard: TBoard;
+  myThread: TThread;
+  myThreadStop: Boolean;
 begin
   //  TODO: [TeamA] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+
+  myBoard := FBoard.Create;
+
+  myBoard.GenerateData(3);
+  myBoard.Data[0] := 1;
+  myBoard.Data[1] := 2;
+  myBoard.Data[2] := 3;
+
+  myThreadStop := False;
+  myThread := TThread.CreateAnonymousThread(procedure
+  begin
+    myBoard.SortBubble;
+    myThreadStop := True;
+  end);
+  myThread.FreeOnTerminate := True;
+  myThread.Start;
+
+  while not myThreadStop do
+    Sleep(25);
+
+  CheckTrue(myBoard.Data[0] = 1, 'Tablica jest źle posortowana');
+  CheckTrue(myBoard.Data[1] = 2, 'Tablica jest źle posortowana');
+  CheckTrue(myBoard.Data[2] = 3, 'Tablica jest źle posortowana');
 end;
 
 procedure TestTBoard.TestSortBubble_312;
