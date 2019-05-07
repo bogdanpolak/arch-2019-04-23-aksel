@@ -201,9 +201,32 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
+var
+  myBoard: TBoard;
+  myThread: TThread;
+  myThreadStop: Boolean;
+  idx: Integer;
 begin
   // TODO: [TeamA] Sprawdź czy sortowanie zadziała poprawnie dla pustego
   // TODO: [TeamD] j.w. = takie same zadanie
+  myBoard := TBoard.Create;
+
+  myBoard.GenerateData(50);
+
+  myThreadStop := False;
+  myThread := TThread.CreateAnonymousThread(procedure
+  begin
+    myBoard.SortBubble;
+    myThreadStop := True;
+  end);
+  myThread.FreeOnTerminate := True;
+  myThread.Start;
+
+  while not myThreadStop do
+    Sleep(25);
+
+  for idx := 0 to myBoard.Count - 2 do
+    CheckTrue(myBoard.Data[idx] < myBoard.Data[idx + 1], 'Tablica jest źle posortowana');
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
