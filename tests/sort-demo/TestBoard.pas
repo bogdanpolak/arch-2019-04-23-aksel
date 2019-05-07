@@ -105,6 +105,10 @@ end;
 procedure TestTBoard.TestSwapNegativeIndexes;
 begin
   // TODO: [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
+  FBoard.GenerateData(10);
+  Self.StartExpectingException(Exception);
+  FBoard.Swap(-1, -4);
+  Self.StopExpectingException('Powinien wystąpić wyjątek');
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
