@@ -87,6 +87,13 @@ begin
     3. Zweryfikuj czy Count = 0
     4. Zweryfikuj czy Length(Data)=0
   *)
+
+  Self.StartExpectingException(EBoardException);
+  FBoard.GenerateData(0);
+  Self.StopExpectingException('Wymagany błąd: "Zła liczba danych do generacji"');
+
+  Check(FBoard.Count = 0, 'Wartość Count różna od 0');
+  Check(Length(FBoard.Data) = 0, 'Wartość Length różna od 0');
 end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
