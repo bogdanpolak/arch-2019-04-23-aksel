@@ -17,6 +17,7 @@ type
   private
     procedure UstawDaneWBoard(AData: TArray<Integer>);
     procedure SprawdzDaneWBoard(AExpectedData: TArray<Integer>);
+    procedure WykonajSortowanie(AProc: TProc);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -50,6 +51,23 @@ begin
   FBoard.GenerateData(Length(AData));
   for idx := 0 to Length(AData) - 1 do
     FBoard.Data[idx] := AData[idx];
+end;
+
+procedure TestTBoard.WykonajSortowanie(AProc: TProc);
+var
+  sortThread: TThread;
+  done: Boolean;
+begin
+  done := False;
+  sortThread := TThread.CreateAnonymousThread(procedure
+  begin
+    AProc;
+    done := True;
+  end);
+  sortThread.FreeOnTerminate := True;
+  sortThread.Start;
+  while not done do
+    sleep(10);
 end;
 
 procedure TestTBoard.SetUp;
@@ -143,24 +161,16 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_312;
-var
-  myThread: TThread;
-  done: Boolean;
 begin
   //  TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
   UstawDaneWBoard([3, 1, 2]);
 
-  done := False;
-  myThread := TThread.CreateAnonymousThread(procedure
-  begin
-    FBoard.SortBubble;
-    done := True;
-  end);
-  myThread.FreeOnTerminate := True;
-  myThread.Start;
-  while not done do
-    sleep(10);
+  WykonajSortowanie(
+    procedure
+    begin
+      FBoard.SortBubble;
+    end);
 
   SprawdzDaneWBoard([1, 2, 3]);
 end;
@@ -173,32 +183,26 @@ end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
 var
-  myThread: TThread;
   tmpBoard: TBoard;
-  done: Boolean;
   error: Boolean;
 begin
   // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
   //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
   tmpBoard := TBoard.Create;
-  done := False;
 
-  myThread := TThread.CreateAnonymousThread(procedure
-  begin
-    error := False;
-    try
-      tmpBoard.SortBubble;
-    except
-      error := True;
-    end;
-    done := True;
-  end);
-  myThread.FreeOnTerminate := True;
-  myThread.Start;
-  while not done do
-    sleep(10);
+  WykonajSortowanie(
+    procedure
+    begin
+      error := False;
+      try
+        tmpBoard.SortBubble;
+      except
+        error := True;
+      end;
+    end);
 
   CheckFalse(error, 'Wystąpił wyjątek przy sortowaniu babelkowym pustej tablicy');
+
   tmpBoard.Free;
 end;
 
@@ -209,49 +213,33 @@ begin
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
-var
-  myThread: TThread;
-  done: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   UstawDaneWBoard([3, 2, 1]);
 
-  done := False;
-  myThread := TThread.CreateAnonymousThread(procedure
-  begin
-    FBoard.SortInsertion;
-    done := True;
-  end);
-  myThread.FreeOnTerminate := True;
-  myThread.Start;
-  while not done do
-    sleep(10);
+  WykonajSortowanie(
+    procedure
+    begin
+      FBoard.SortInsertion;
+    end);
 
   SprawdzDaneWBoard([1, 2, 3]);
 end;
 
 procedure TestTBoard.TestSortQuick_321;
-var
-  myThread: TThread;
-  done: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   UstawDaneWBoard([3, 2, 1]);
 
-  done := False;
-  myThread := TThread.CreateAnonymousThread(procedure
-  begin
-    FBoard.SortQuick;
-    done := True;
-  end);
-  myThread.FreeOnTerminate := True;
-  myThread.Start;
-  while not done do
-    sleep(10);
+  WykonajSortowanie(
+    procedure
+    begin
+      FBoard.SortQuick;
+    end);
 
   SprawdzDaneWBoard([1, 2, 3]);
 end;
