@@ -80,11 +80,13 @@ end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
 begin
-  // TODO: [TeamC] Wpełnić FBoard ujemną liczbą danych
   (*
     Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
     Zobacz w żródłach: TestFramework.pas
   *)
+  Self.StartExpectingException(EBoardException);
+  FBoard.GenerateData(-10);
+  Self.StopExpectingException('Powinien wyskoczyć raise: "Zła liczba danych do generacji"');
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
