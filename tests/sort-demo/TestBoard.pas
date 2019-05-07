@@ -15,6 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
+    function CreateMyBoard(IIdx1, IIdx2, IIdx3: Integer): TBoard;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -40,6 +41,16 @@ type
   end;
 
 implementation
+
+function TestTBoard.CreateMyBoard(IIdx1, IIdx2, IIdx3: Integer): TBoard;
+begin
+  Result := FBoard.Create;
+
+  Result.GenerateData(3);
+  Result.Data[0] := IIdx1;
+  Result.Data[1] := IIdx2;
+  Result.Data[2] := IIdx3;
+end;
 
 procedure TestTBoard.SetUp;
 begin
@@ -145,12 +156,7 @@ begin
   //  TODO: [TeamA] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
 
-  myBoard := FBoard.Create;
-
-  myBoard.GenerateData(3);
-  myBoard.Data[0] := 1;
-  myBoard.Data[1] := 2;
-  myBoard.Data[2] := 3;
+  myBoard := CreateMyBoard(1, 2, 3);
 
   myThreadStop := False;
   myThread := TThread.CreateAnonymousThread(procedure
