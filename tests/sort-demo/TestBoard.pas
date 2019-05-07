@@ -88,15 +88,41 @@ begin
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
+var
+  temp0: Integer;
+  temp1: Integer;
 begin
   // TODO: [TeamA] Zweryfkować swap indeksów 0 i 1
   // Uwaga! Najpierw trzeba wypełnić dane
+
+  FBoard.GenerateData(5);
+
+  temp0 := FBoard.Data[0];
+  temp1 := FBoard.Data[1];
+
+  FBoard.Swap(0, 1);
+
+  Check(temp0 = FBoard.Data[1], 'Wartości się nie zamieniły');
+  Check(temp1 = FBoard.Data[0], 'Wartości się nie zamieniły');
 end;
 
 procedure TestTBoard.TestSwapTwoLastValues;
+var
+  tempM2: Integer;
+  tempM1: Integer;
 begin
   // TODO: [TeamA] Zweryfkować swap dwóch ostatnich indeksów max-2 oraz max-1
   // Uwaga! Trzeba wypełnić dane przynajmiej 3 elementami
+
+  FBoard.GenerateData(10);
+
+  tempM2 := FBoard.Data[FBoard.Count - 2];
+  tempM1 := FBoard.Data[FBoard.Count - 1];
+
+  FBoard.Swap(FBoard.Count - 2, FBoard.Count - 1);
+
+  Check(tempM2 = FBoard.Data[FBoard.Count - 1], 'Wartości się nie zamieniły');
+  Check(tempM1 = FBoard.Data[FBoard.Count - 2], 'Wartości się nie zamieniły');
 end;
 
 procedure TestTBoard.TestSwapNegativeIndexes;
