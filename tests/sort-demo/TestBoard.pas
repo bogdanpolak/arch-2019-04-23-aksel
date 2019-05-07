@@ -152,11 +152,7 @@ procedure TestTBoard.TestSortBubble_111;
 begin
   //  TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
-  GenerateData(3);
-  FBoard.Data[0] := 1;
-  FBoard.Data[1] := 1;
-  FBoard.Data[2] := 1;
-
+  GenerateData(3, [1,1,1]);
   FBoard.SortBubble;
 
   CheckEquals(0, FBoard.FSwapCounter, 'Wykonano conajmniej jedną zmianę tych samych elementów');
