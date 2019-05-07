@@ -84,6 +84,7 @@ begin
     Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
     Zobacz w żródłach: TestFramework.pas
   *)
+  { [TeamC] Wpełnić FBoard ujemną liczbą danych }
   Self.StartExpectingException(EBoardException);
   FBoard.GenerateData(-10);
   Self.StopExpectingException('Powinien wyskoczyć raise: "Zła liczba danych do generacji"');
@@ -103,7 +104,11 @@ end;
 
 procedure TestTBoard.TestSwapNegativeIndexes;
 begin
-  // TODO: [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
+  { [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem }
+  FBoard.GenerateData(20);
+  Self.StartExpectingException(EBoardException);
+  FBoard.Swap(-5, -7);   {todo: trzeba pooprawić funkcje}
+  Self.StopExpectingException('Swap - dwa ujemne indesky powinny dać wyjątek');
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
