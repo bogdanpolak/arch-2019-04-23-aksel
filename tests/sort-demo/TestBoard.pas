@@ -229,10 +229,32 @@ begin
 end;
 
 procedure TestTBoard.TestSortQuick_321;
+var
+  myBoard: TBoard;
+  myThread: TThread;
+  myThreadStop: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
+
+  myBoard := CreateMyBoard(3, 2, 1);
+
+  myThreadStop := False;
+  myThread := TThread.CreateAnonymousThread(procedure
+  begin
+    myBoard.SortQuick;
+    myThreadStop := True;
+  end);
+  myThread.FreeOnTerminate := True;
+  myThread.Start;
+
+  while not myThreadStop do
+    Sleep(25);
+
+  CheckTrue(myBoard.Data[0] = 1, 'Tablica jest źle posortowana');
+  CheckTrue(myBoard.Data[1] = 2, 'Tablica jest źle posortowana');
+  CheckTrue(myBoard.Data[2] = 3, 'Tablica jest źle posortowana');
 end;
 
 initialization
