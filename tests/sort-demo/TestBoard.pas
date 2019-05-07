@@ -16,6 +16,7 @@ type
     FBoard: TBoard;
   private
     procedure UstawDaneWBoard(AData: TArray<Integer>);
+    procedure SprawdzDaneWBoard(AExpectedData: TArray<Integer>);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -54,6 +55,14 @@ end;
 procedure TestTBoard.SetUp;
 begin
   FBoard := TBoard.Create;
+end;
+
+procedure TestTBoard.SprawdzDaneWBoard(AExpectedData: TArray<Integer>);
+var
+  idx: Integer;
+begin
+  for idx := 0 to Length(AExpectedData) - 1 do
+    CheckEquals(AExpectedData[idx], FBoard.Data[idx], 'Nieprawidłowa wartość danych w tabeli na idx = ' + idx.ToString);
 end;
 
 procedure TestTBoard.TearDown;
@@ -141,6 +150,7 @@ begin
   //  TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
   UstawDaneWBoard([3, 1, 2]);
+
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -152,9 +162,7 @@ begin
   while not done do
     sleep(10);
 
-  CheckEquals(1, FBoard.Data[0], 'Nieprawidłowa wartość danych w tabeli na idx = 0');
-  CheckEquals(2, FBoard.Data[1], 'Nieprawidłowa wartość danych w tabeli na idx = 1');
-  CheckEquals(3, FBoard.Data[2], 'Nieprawidłowa wartość danych w tabeli na idx = 2');
+  SprawdzDaneWBoard([1, 2, 3]);
 end;
 
 procedure TestTBoard.TestSortBubble_111;
@@ -174,6 +182,7 @@ begin
   //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
   tmpBoard := TBoard.Create;
   done := False;
+
   myThread := TThread.CreateAnonymousThread(procedure
   begin
     error := False;
@@ -188,6 +197,7 @@ begin
   myThread.Start;
   while not done do
     sleep(10);
+
   CheckFalse(error, 'Wystąpił wyjątek przy sortowaniu babelkowym pustej tablicy');
   tmpBoard.Free;
 end;
@@ -207,6 +217,7 @@ begin
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   UstawDaneWBoard([3, 2, 1]);
+
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -218,9 +229,7 @@ begin
   while not done do
     sleep(10);
 
-  CheckEquals(1, FBoard.Data[0], 'Nieprawidłowa wartość danych w tabeli na idx = 0');
-  CheckEquals(2, FBoard.Data[1], 'Nieprawidłowa wartość danych w tabeli na idx = 1');
-  CheckEquals(3, FBoard.Data[2], 'Nieprawidłowa wartość danych w tabeli na idx = 2');
+  SprawdzDaneWBoard([1, 2, 3]);
 end;
 
 procedure TestTBoard.TestSortQuick_321;
@@ -232,6 +241,7 @@ begin
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
   UstawDaneWBoard([3, 2, 1]);
+
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -243,9 +253,7 @@ begin
   while not done do
     sleep(10);
 
-  CheckEquals(1, FBoard.Data[0], 'Nieprawidłowa wartość danych w tabeli na idx = 0');
-  CheckEquals(2, FBoard.Data[1], 'Nieprawidłowa wartość danych w tabeli na idx = 1');
-  CheckEquals(3, FBoard.Data[2], 'Nieprawidłowa wartość danych w tabeli na idx = 2');
+  SprawdzDaneWBoard([1, 2, 3]);
 end;
 
 initialization
