@@ -44,7 +44,7 @@ implementation
 
 function TestTBoard.CreateMyBoard(IIdx1, IIdx2, IIdx3: Integer): TBoard;
 begin
-  Result := FBoard.Create;
+  Result := TBoard.Create;
 
   Result.GenerateData(3);
   Result.Data[0] := IIdx1;
