@@ -15,6 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
+    procedure UstawDaneWBoard(AData: TArray<Integer>);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -40,6 +41,15 @@ type
   end;
 
 implementation
+
+procedure TestTBoard.UstawDaneWBoard(AData: TArray<Integer>);
+var
+  idx: Integer;
+begin
+  FBoard.GenerateData(Length(AData));
+  for idx := 0 to Length(AData) - 1 do
+    FBoard.Data[idx] := AData[idx];
+end;
 
 procedure TestTBoard.SetUp;
 begin
@@ -130,10 +140,7 @@ var
 begin
   //  TODO: [TeamC] wypełnij tablicę danymi [3, 1, 2] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
-  FBoard.GenerateData(3);
-  FBoard.Data[0] := 3;
-  FBoard.Data[1] := 1;
-  FBoard.Data[2] := 2;
+  UstawDaneWBoard([3, 1, 2]);
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -199,10 +206,7 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
-  FBoard.GenerateData(3);
-  FBoard.Data[0] := 3;
-  FBoard.Data[1] := 2;
-  FBoard.Data[2] := 1;
+  UstawDaneWBoard([3, 2, 1]);
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
@@ -227,10 +231,7 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
-  FBoard.GenerateData(3);
-  FBoard.Data[0] := 3;
-  FBoard.Data[1] := 2;
-  FBoard.Data[2] := 1;
+  UstawDaneWBoard([3, 2, 1]);
   done := False;
   myThread := TThread.CreateAnonymousThread(procedure
   begin
