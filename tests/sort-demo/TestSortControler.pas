@@ -113,7 +113,22 @@ begin
   CheckTrue(done, 'Sortowanie nie zostało zakończone, timeout');
 end;
 
+procedure WaitMilisecond(ATimeMs: Double);
+var
+  startTime64, endTime64, frequency64: Int64;
+begin
+  QueryPerformanceFrequency(frequency64);
+  QueryPerformanceCounter(startTime64);
+  QueryPerformanceCounter(endTime64);
+  while ((endTime64 - startTime64) / frequency64 * 1000 < ATimeMs) do
+    QueryPerformanceCounter(endTime64);
+end;
+
 procedure TestTSortControler.TestTerminateThread;
+var
+  stamp: Cardinal;
+  done: Boolean;
+  boardMess: TBoardMessage;
 begin
   // TODO: Sprawdzić działąnie metody TSortControler.TerminateThread
   (*
@@ -123,6 +138,31 @@ begin
     po odczekaniu krótkiego czasu (15ms) powinen przerywać działanie wątku
     roboczego (metoda: TSortControler.TerminateThread.
   *)
+
+  FMessageQueue.Grow(1000);
+
+  FSortControler.Execute;
+
+  WaitMilisecond(15);
+
+  FSortControler.TerminateThread;
+
+  stamp := GetTickCount;
+  while (TicksBetweenNow(stamp) < 1000) do
+    Sleep(10);
+
+  done := False;
+  while FMessageQueue.QueueSize > 0 do
+  begin
+    boardMess := FMessageQueue.PopItem;
+    if boardMess.MessageType = mtDone then
+    begin
+      done := True;
+      Break;
+    end;
+  end;
+
+  CheckFalse(done, 'Nie powinno być MessageType = mtDone');
 end;
 
 function TestTSortControler.TicksBetweenNow(AStartTicks: Cardinal): Cardinal;
