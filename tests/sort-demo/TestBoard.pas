@@ -15,6 +15,7 @@ type
   strict private
     FBoard: TBoard;
   private
+    function CreateLocalBoard321: TBoard;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -40,6 +41,15 @@ type
   end;
 
 implementation
+
+function TestTBoard.CreateLocalBoard321: TBoard;
+begin
+  Result := TBoard.Create;
+  Result.GenerateData(3);
+  Result.Data[0] := 3;
+  Result.Data[1] := 2;
+  Result.Data[2] := 1;
+end;
 
 procedure TestTBoard.SetUp;
 begin
@@ -80,11 +90,14 @@ end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
 begin
-  // TODO: [TeamC] Wpełnić FBoard ujemną liczbą danych
   (*
     Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
     Zobacz w żródłach: TestFramework.pas
   *)
+  { [TeamC] Wpełnić FBoard ujemną liczbą danych }
+  Self.StartExpectingException(EBoardException);
+  FBoard.GenerateData(-10);
+  Self.StopExpectingException('Powinien wyskoczyć raise: "Zła liczba danych do generacji"');
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
@@ -101,7 +114,11 @@ end;
 
 procedure TestTBoard.TestSwapNegativeIndexes;
 begin
-  // TODO: [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
+  { [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem }
+  FBoard.GenerateData(20);
+  Self.StartExpectingException(EBoardException);
+  FBoard.Swap(-5, -7);   {todo: trzeba pooprawić funkcje}
+  Self.StopExpectingException('Swap - dwa ujemne indesky powinny dać wyjątek');
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
@@ -117,9 +134,31 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_312;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
 begin
-  //  TODO: [TeamC] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  { [TeamC] wypełnij tablicę danymi [3, 2, 1] uruchom sortowanie
+      bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie }
+  localBoard := CreateLocalBoard321;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    localBoard.SortBubble;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+
+  while not stopped do
+    sleep(10);
+
+  CheckTrue(localBoard.Data[0] = 1, 'Źle posortowana tabela bubble sort (idx: 0 -> should be 1 but is localBoard.Data[0])');
+  CheckTrue(localBoard.Data[1] = 2, 'Źle posortowana tabela bubble sort (idx: 1 -> should be 2 but is localBoard.Data[1])');
+  CheckTrue(localBoard.Data[2] = 3, 'Źle posortowana tabela bubble sort (idx: 2 -> should be 3 but is localBoard.Data[2])');
+
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortBubble_111;
@@ -129,9 +168,32 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
+  exception: Boolean;
 begin
-  // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
+  { [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
+     zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek }
+  localBoard := TBoard.Create;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    exception := False;
+    try
+      localBoard.SortBubble;
+    except
+      exception := True;
+    end;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+  while not stopped do
+    sleep(10);
+  CheckFalse(exception, 'Pojawił się wyjątek - sortowaniu babelkowym - pusta tablica, a nie powinien');
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
@@ -141,17 +203,61 @@ begin
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
-  // TODO: [TeamC] j.w.
+  { [TeamC] j.w. }
   // TODO: [TeamD] j.w.
+  localBoard := CreateLocalBoard321;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    localBoard.SortInsertion;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+
+  while not stopped do
+    sleep(10);
+
+  CheckTrue(localBoard.Data[0] = 1, 'Źle posortowana tabela insertion sort (idx: 0 -> should be 1 but is localBoard.Data[0])');
+  CheckTrue(localBoard.Data[1] = 2, 'Źle posortowana tabela insertion sort (idx: 1 -> should be 2 but is localBoard.Data[1])');
+  CheckTrue(localBoard.Data[2] = 3, 'Źle posortowana tabela insertion sort (idx: 2 -> should be 3 but is localBoard.Data[2])');
+
+  localBoard.Free;
 end;
 
 procedure TestTBoard.TestSortQuick_321;
+var
+  localThread: TThread;
+  localBoard: TBoard;
+  stopped: Boolean;
 begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
-  // TODO: [TeamC] j.w.
+  { [TeamC] j.w. }
   // TODO: [TeamD] j.w.
+  localBoard := CreateLocalBoard321;
+  stopped := False;
+  localThread := TThread.CreateAnonymousThread(procedure
+  begin
+    localBoard.SortQuick;
+    stopped := True;
+  end);
+  localThread.FreeOnTerminate := True;
+  localThread.Start;
+
+  while not stopped do
+    sleep(10);
+
+  CheckTrue(localBoard.Data[0] = 1, 'Źle posortowana tabela quick sort (idx: 0 -> should be 1 but is localBoard.Data[0])');
+  CheckTrue(localBoard.Data[1] = 2, 'Źle posortowana tabela quick sort (idx: 1 -> should be 2 but is localBoard.Data[1])');
+  CheckTrue(localBoard.Data[2] = 3, 'Źle posortowana tabela quick sort (idx: 2 -> should be 3 but is localBoard.Data[2])');
+
+  localBoard.Free;
 end;
 
 initialization
