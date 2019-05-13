@@ -6,7 +6,7 @@ unit TestBoard;
 interface
 
 uses
-  System.Generics.Collections, System.SysUtils, System.Classes,
+  System.Generics.Collections, System.SysUtils, System.Classes, System.JSON,
   TestFramework,
   Model.Board;
 
@@ -14,7 +14,13 @@ type
   TestTBoard = class(TTestCase)
   strict private
     FBoard: TBoard;
-  private
+    function CreateJsonFromBoardData: TJSONArray;
+  protected
+    procedure FillBoard(arr: TArray<Integer>);
+    function BoardToString: string;
+    function BoardIsSorted: boolean;
+    procedure CheckBoardData (const AExpected:string;
+      const AFailedMessage: string = '');
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -33,7 +39,7 @@ type
     procedure TestSortBubble_312;
     procedure TestSortBubble_111;
     procedure TestSortBubble_EmptyData;
-    procedure TestSortBubble_50Random_Range1ToMax;
+    procedure TestSortBubble_13Random_Range1ToMax;
     // TBorad.Sort... :
     procedure TestSortInsertion_321;
     procedure TestSortQuick_321;
@@ -52,106 +58,163 @@ begin
   FBoard := nil;
 end;
 
+function TestTBoard.CreateJsonFromBoardData: TJSONArray;
+var
+  i: Integer;
+begin
+  Result := TJSONArray.Create;
+  for i := 0 to FBoard.Count-1 do
+    Result.Add(FBoard.Data[i])
+end;
+
+procedure TestTBoard.FillBoard (arr: TArray<Integer>);
+var
+  i: Integer;
+begin
+  // TODO: Zmienić na class-helper dla TBoard?
+  FBoard.GenerateData(Length(arr));
+  for i:=0 to Length(arr)-1 do
+    FBoard.Data[i] := arr[i];
+end;
+
+function TestTBoard.BoardIsSorted: boolean;
+var
+  i: Integer;
+begin
+  // TODO: Zmienić na class-helper dla TBoard?
+  for i := 1 to FBoard.Count-1 do
+    if FBoard.Data[i-1]>FBoard.Data[i] then
+    begin
+      Result := False;
+      exit;
+    end;
+  Result := True;
+end;
+
+function TestTBoard.BoardToString: string;
+var
+  jarr: TJSONArray;
+begin
+  jarr := CreateJsonFromBoardData;
+  Result := jarr.ToString;
+  jarr.Free;
+end;
+
+
+procedure TestTBoard.CheckBoardData(const AExpected, AFailedMessage: string);
+var
+  jarr: TJSONArray;
+  ACurrent: string;
+begin
+  jarr := CreateJsonFromBoardData;
+  ACurrent := jarr.ToString;
+  jarr.Free;
+  CheckEquals(AExpected, ACurrent, AFailedMessage);
+end;
+
+
 procedure TestTBoard.TestGenerate10Data;
 begin
   FBoard.GenerateData(10);
   CheckEquals(10, FBoard.Count, 'Nieodpowiednia liczba danych');
-  (*
-    Self.CheckEquals (expected, actual, msg)
-    - sprawdza czy actual = expected i jeśli nie jest to zwraca negatywny
-      wynik testu
-    - tylko w przyapdku negatywnego wyniku wyświetalny jest komunikat msg
-  *)
-
 end;
 
 procedure TestTBoard.TestGenerateZeroData;
 begin
-  // TODO: [TeamA] Zweyfikuj działanie grerate dla 0
-  // TODO: [TeamD]  j.w. = takie same zadanie
-  (*
-    Kroki:
-    1. Generate(n), gdzie n>=1 - wypełnij dowolną liczbą danych
-    2. Gerate(0) - wypełniż zero elementów
-    3. Zweryfikuj czy Count = 0
-    4. Zweryfikuj czy Length(Data)=0
-  *)
+  FBoard.GenerateData(0);
+  CheckEquals(0,FBoard.Count);
 end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
 begin
-  // TODO: [TeamC] Wpełnić FBoard ujemną liczbą danych
-  (*
-    Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
-    Zobacz w żródłach: TestFramework.pas
-  *)
+  Self.ExpectedException := EBoardException;
+  FBoard.GenerateData(-1);
+  StopExpectingException();
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
 begin
-  // TODO: [TeamA] Zweryfkować swap indeksów 0 i 1
-  // Uwaga! Najpierw trzeba wypełnić dane
+  FillBoard([0,1]);
+  FBoard.Swap(0,1);
+  CheckBoardData('[1,0]');
 end;
 
 procedure TestTBoard.TestSwapTwoLastValues;
 begin
-  // TODO: [TeamA] Zweryfkować swap dwóch ostatnich indeksów max-2 oraz max-1
-  // Uwaga! Trzeba wypełnić dane przynajmiej 3 elementami
+  FillBoard([0,0,0,0,1]);
+  FBoard.Swap(FBoard.Count-2,FBoard.Count-1);
+  CheckBoardData('[0,0,0,1,0]');
 end;
 
 procedure TestTBoard.TestSwapNegativeIndexes;
 begin
-  // TODO: [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
+  FillBoard([1]);
+  ExpectedException := EBoardException;
+  FBoard.Swap(0,-1);
+  StopExpectingException();
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
 begin
-  // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
-  //   rzuca wyjątkiem
+  FillBoard([0,1]);
+  ExpectedException := EBoardException;
+  FBoard.Swap(1,2);
+  StopExpectingException();
 end;
 
 procedure TestTBoard.TestSortBubble_123;
 begin
-  //  TODO: [TeamA] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  FillBoard([1,2,3]);
+  FBoard.SortBubble;
+  CheckBoardData('[1,2,3]');
 end;
 
 procedure TestTBoard.TestSortBubble_312;
 begin
-  //  TODO: [TeamC] wypełnij tablicę danymi [1, 2, 3] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  FillBoard([3,2,1]);
+  FBoard.SortBubble;
+  CheckBoardData('[1,2,3]');
 end;
 
 procedure TestTBoard.TestSortBubble_111;
 begin
-  //  TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
-  //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  FillBoard([1,1,1]);
+  FBoard.SortBubble;
+  CheckBoardData('[1,1,1]');
 end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
 begin
-  // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
+  FBoard.GenerateData(0);
+  FBoard.SortBubble;
 end;
 
-procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
+procedure TestTBoard.TestSortBubble_13Random_Range1ToMax;
+var
+  ABefore: string;
+  AAfter: string;
 begin
-  // TODO: [TeamA] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  // TODO: [TeamD] j.w. = takie same zadanie
+  FBoard.GenerateData(13);
+  ABefore := BoardToString;
+  FBoard.SortBubble;
+  AAfter := BoardToString;
+  Check (BoardIsSorted,
+    Format('Dla danych %s sortowanie działa źle. Wynik: %s',[ABefore,AAfter])
+  );
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
 begin
-  // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
-  // TODO: [TeamC] j.w.
-  // TODO: [TeamD] j.w.
+  FillBoard([3,2,1]);
+  FBoard.SortInsertion;
+  CheckBoardData('[1,2,3]');
 end;
 
 procedure TestTBoard.TestSortQuick_321;
 begin
-  // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
-  // TODO: [TeamC] j.w.
-  // TODO: [TeamD] j.w.
+  FillBoard([3,2,1]);
+  FBoard.SortQuick;
+  CheckBoardData('[1,2,3]');
 end;
 
 initialization

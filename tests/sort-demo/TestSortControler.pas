@@ -6,8 +6,8 @@ unit TestSortControler;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Diagnostics, System.TimeSpan,
   TestFramework,
+  System.Diagnostics, System.TimeSpan, System.Classes,
   Model.Board,
   Controler.Sort;
 
@@ -18,6 +18,8 @@ type
   strict private
     FBoard: TBoard;
     FSortControler: TSortControler;
+  private
+    procedure WaitForSortThread(timeoutMs: integer);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -31,75 +33,123 @@ implementation
 
 uses
   View.Board,
-  Mock.BoardView;
+  System.SysUtils;
+
+type
+  TBoardViewMock = class(TInterfacedObject, IBoardView)
+  const
+    DataItemsCount = 11;
+  public
+    class var DrawCount: integer;
+    procedure DrawBoard;
+    procedure DrawItem(AIndex: integer);
+    procedure DrawResults(const AAlgoritmName: string; AElapsedTime: TTimeSpan);
+    function CountVisibleItems: integer;
+  end;
 
 procedure TestTSortControler.SetUp;
+var
+  FBoradView: IBoardView;
 begin
   FBoard := TBoard.Create;
-  // TODO: Stworzyć FSortControler
-  //   w tym celu potrzebny jest obiekt, który implementuje inteface IBoardView
-  //   Proszę stworzyć tzw. zaślepkęm, czyki Mock, kótrzy prawie
-  //   W mocku potrzebne będzie zwracanie liczby widocznych danych
-  //   Mock prosze zdefinować w unit: Mock.BoardView.pas
-  (*
   FSortControler := TSortControler.Create(FBoard, TBoardViewMock.Create);
-  *)
 end;
 
 procedure TestTSortControler.TearDown;
 begin
-  (*
   FSortControler.Free;
   FSortControler := nil;
-  *)
   FBoard.Free;
   FBoard := nil;
 end;
 
+procedure TestTSortControler.WaitForSortThread(timeoutMs: integer);
+var
+  sw: TStopwatch;
+  enlapsed: Int64;
+begin
+  sw := TStopwatch.StartNew;
+  enlapsed := sw.ElapsedMilliseconds;
+  while FSortControler.IsBusy and (enlapsed < timeoutMs) do
+  begin
+    Sleep(10);
+    enlapsed := sw.ElapsedMilliseconds;
+  end;
+  Check(enlapsed < timeoutMs,
+    Format('Waiting too log for sort thread to finish (timeout=%d ms)',
+    [timeoutMs]));
+end;
+
 procedure TestTSortControler.TestExecute;
 begin
-  // TODO: Sprawdzić metodę TSortControler.Execute
-  (*
-    Uwaga!
-    ------
-    Metoda Execute generuje dane i uruchamia nowy wątek roboczy w którym
-    wykonywane jest sortowanie, czyli nie można od razy skończyć tego testu.
-    Prosze wymyśleć jak można czekać na zakończenie wątku roboczego.
-
-    Uwaga!
-    ------
-    Uruchomienie testu spowoduje zawieszenie się wątku roboczego, czyli nie
-    można czekać w nieskończoność na jego zakończenie. Proszę ustawić timeout
-    w czekaniu (np. 1 sekunda)
-
-    TBorad nie jest w pełni wielowątkowy (tzw. thread-safe), ponieważ korzysta
-    ze wspólnej pamięci, bez dodawania sekcji bezpiecznych. Proszę zlokalizować
-    tą "czarną owcę" w TBoard. Prosze tutaj poniżej niapisać co to jest.
-    Proszę nie poprawiać błędów w TBoard.
-  *)
+  FSortControler.SortAlgorithm := saBubbleSort;
+  FSortControler.Execute;
+  WaitForSortThread(1000); // timeout in miliseconds
+  CheckEquals(TBoardViewMock.DataItemsCount, FBoard.Count);
 end;
 
 procedure TestTSortControler.TestTerminateThread;
+var
+  IsBusy: Boolean;
 begin
-  // TODO: Sprawdzić działąnie metody TSortControler.TerminateThread
-  (*
-    Uwaga!!! Zadanie dla ambitnych :-)
-    -----
-    Test powinien urachamiać wątek roboczy (metoda: TSortControler.Execute), a
-    po odczekaniu krótkiego czasu (15ms) powinen przerywać działanie wątku
-    roboczego (metoda: TSortControler.TerminateThread.
-  *)
+  FSortControler.SortAlgorithm := saBubbleSort;
+  FSortControler.Execute;
+  Sleep(5);
+  Check(FSortControler.IsBusy = True, '[CP1] FSortControler.IsBusy');
+  FSortControler.TerminateThread;
+  Sleep(10);
+  Check(FSortControler.IsBusy = False, '[CP2] FSortControler.IsBusy');
 end;
 
 procedure TestTSortControler.TestDispatchBoardMessage;
+var
+  ReturnValue: Boolean;
+  m: TBoardMessage;
 begin
-  // TODO: Sprawdzić czy po dodanu do kolejki FMessageQueue (w Model.Board.pas)
-  // kilku komunikatów Swap zostaną oe poprawnie obsłużone przez metodę
-  // DispatchBoardMessage
+  while FMessageQueue.QueueSize > 0 do
+    FMessageQueue.PopItem;
+  TBoardViewMock.DrawCount := 0;
+  FMessageQueue.PushItem(TBoardMessage.CreateMessageSwap(FBoard, 1, 0));
+  FMessageQueue.PushItem(TBoardMessage.CreateMessageSwap(nil, 2, 0));
+  FMessageQueue.PushItem(TBoardMessage.CreateMessageSwap(FBoard, 3, 0));
+  m := FMessageQueue.PopItem;
+  Check(FSortControler.DispatchBoardMessage(m) = True,
+    '[CP1] .DispatchBoardMessage');
+  m := FMessageQueue.PopItem;
+  Check(FSortControler.DispatchBoardMessage(m) = False,
+    '[CP2] .DispatchBoardMessage');
+  m := FMessageQueue.PopItem;
+  Check(FSortControler.DispatchBoardMessage(m) = True,
+    '[CP3] .DispatchBoardMessage');
+  CheckEquals(4, TBoardViewMock.DrawCount, '[CP4] TBoardViewMock.DrawCount');
+end;
+
+{ TBoardViewMock }
+
+function TBoardViewMock.CountVisibleItems: integer;
+begin
+  Result := DataItemsCount;
+end;
+
+procedure TBoardViewMock.DrawBoard;
+begin
+
+end;
+
+procedure TBoardViewMock.DrawItem(AIndex: integer);
+begin
+  inc(TBoardViewMock.DrawCount);
+end;
+
+procedure TBoardViewMock.DrawResults(const AAlgoritmName: string;
+  AElapsedTime: TTimeSpan);
+begin
+
 end;
 
 initialization
 
+// Register any test cases with the test runner
 RegisterTest(TestTSortControler.Suite);
 
 end.
