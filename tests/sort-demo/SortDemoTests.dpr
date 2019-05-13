@@ -10,6 +10,10 @@ program SortDemoTests;
 {$APPTYPE CONSOLE}
 {$ENDIF}
 
+TODO: zdefniuj w opcjach projektu zmienną kompilatora: APP_UNDER_TESTS
+  Project -> Options -> Delphi Compiler -> Conditional defines
+  Potem można skasować te linie
+
 uses
   DUnitTestRunner,
   Model.Board in '..\..\src\sort-demo\Model.Board.pas',
