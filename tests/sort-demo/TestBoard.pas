@@ -23,18 +23,18 @@ type
     procedure TestGenerate10Data;
     procedure TestGenerateZeroData;
     procedure TestGenerateNegativeNumberOfData;
-    // TBorad.Swap:
+    // TBoard.Swap:
     procedure TestSwapZeroAndOne;
     procedure TestSwapTwoLastValues;
     procedure TestSwapNegativeIndexes;
     procedure TestSwapOutOfRangeIndex;
-    // TBorad.SortBubble:
+    // TBoard.SortBubble:
     procedure TestSortBubble_123;
     procedure TestSortBubble_312;
     procedure TestSortBubble_111;
     procedure TestSortBubble_EmptyData;
     procedure TestSortBubble_50Random_Range1ToMax;
-    // TBorad.Sort... :
+    // TBoard.Sort... :
     procedure TestSortInsertion_321;
     procedure TestSortQuick_321;
   end;
@@ -60,19 +60,19 @@ begin
     Self.CheckEquals (expected, actual, msg)
     - sprawdza czy actual = expected i jeśli nie jest to zwraca negatywny
       wynik testu
-    - tylko w przyapdku negatywnego wyniku wyświetalny jest komunikat msg
+    - tylko w przypadku negatywnego wyniku wyświetlany jest komunikat msg
   *)
 
 end;
 
 procedure TestTBoard.TestGenerateZeroData;
 begin
-  // TODO: [TeamA] Zweyfikuj działanie grerate dla 0
+  // TODO: [TeamA] Zweryfikuj działanie generate dla 0
   // TODO: [TeamD]  j.w. = takie same zadanie
   (*
     Kroki:
     1. Generate(n), gdzie n>=1 - wypełnij dowolną liczbą danych
-    2. Gerate(0) - wypełniż zero elementów
+    2. Generate(0) - wypełnij zero elementów
     3. Zweryfikuj czy Count = 0
     4. Zweryfikuj czy Length(Data)=0
   *)
@@ -80,33 +80,33 @@ end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
 begin
-  // TODO: [TeamC] Wpełnić FBoard ujemną liczbą danych
+  // TODO: [TeamC] Wypełnij FBoard ujemną liczbą danych
   (*
-    Użyj fukcji Self.StartExpectingException oraz Self.StopExpectingException
-    Zobacz w żródłach: TestFramework.pas
+    Użyj funkcji Self.StartExpectingException oraz Self.StopExpectingException
+    Zobacz w źródłach: TestFramework.pas
   *)
 end;
 
 procedure TestTBoard.TestSwapZeroAndOne;
 begin
-  // TODO: [TeamA] Zweryfkować swap indeksów 0 i 1
+  // TODO: [TeamA] Zweryfikować swap indeksów 0 i 1
   // Uwaga! Najpierw trzeba wypełnić dane
 end;
 
 procedure TestTBoard.TestSwapTwoLastValues;
 begin
-  // TODO: [TeamA] Zweryfkować swap dwóch ostatnich indeksów max-2 oraz max-1
-  // Uwaga! Trzeba wypełnić dane przynajmiej 3 elementami
+  // TODO: [TeamA] Zweryfikować swap dwóch ostatnich indeksów max-2 oraz max-1
+  // Uwaga! Trzeba wypełnić dane przynajmniej 3 elementami
 end;
 
 procedure TestTBoard.TestSwapNegativeIndexes;
 begin
-  // TODO: [TeamC] Zweryfkować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
+  // TODO: [TeamC] Zweryfikować czy swap dwóch ujemnych indeksów rzuca wyjątkiem
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
 begin
-  // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
+  // TODO: [TeamD] Zweryfikować czy swap dwóch indeksów dodatnich z poza zakresu
   //   rzuca wyjątkiem
 end;
 
@@ -131,7 +131,7 @@ end;
 procedure TestTBoard.TestSortBubble_EmptyData;
 begin
   // [TeamC] Sprawdź czy sortowanie zadziała poprawnie dla pustego
-  //   zbioru danych. Weryfikacja ma sprawdzić czy nie poawił się wyjątek
+  //   zbioru danych. Weryfikacja ma sprawdzić czy nie pojawił się wyjątek
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;

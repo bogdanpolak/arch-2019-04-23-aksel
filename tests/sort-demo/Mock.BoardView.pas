@@ -14,7 +14,7 @@ uses
    Uwaga!
    -------
    Metoda CountVisibleItems musi zwracać liczbę elementów. Nie warto wpisywać
-   za duzej wartości bo sortowanie bąbelkowe bedzie trwało zbyt długo/
+   za dużej wartości bo sortowanie bąbelkowe będzie trwało zbyt długo
    Max. 20 elementów
 *)
 
