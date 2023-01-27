@@ -6,7 +6,7 @@ unit TestBoard;
 interface
 
 uses
-  System.Generics.Collections, System.SysUtils, System.Classes,
+  System.Generics.Collections, System.SysUtils, System.Classes, System.SyncObjs,
   TestFramework,
   Model.Board;
 
@@ -14,7 +14,10 @@ type
   TestTBoard = class(TTestCase)
   strict private
     FBoard: TBoard;
+    FEvent: TEvent;
   private
+    procedure GenerateData(AItemsCount: Integer; AItems: TArray<Integer> = []);
+    procedure CreateAndStartSortThread(AProc: TProc);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -44,12 +47,15 @@ implementation
 procedure TestTBoard.SetUp;
 begin
   FBoard := TBoard.Create;
+  FEvent := TEvent.Create;
 end;
 
 procedure TestTBoard.TearDown;
 begin
   FBoard.Free;
   FBoard := nil;
+  FEvent.Free;
+  FEvent := nil;
 end;
 
 procedure TestTBoard.TestGenerate10Data;
@@ -65,6 +71,16 @@ begin
 
 end;
 
+procedure TestTBoard.GenerateData(AItemsCount: Integer; AItems: TArray<Integer> = []);
+var
+  idx: Integer;
+begin
+  FBoard.GenerateData(AItemsCount);
+  if Length(AItems) <= FBoard.Count then
+    for idx := 0 to Length(AItems) - 1 do
+      FBoard.Data[idx] := AItems[idx];
+end;
+
 procedure TestTBoard.TestGenerateZeroData;
 begin
   // TODO: [TeamA] Zweyfikuj działanie grerate dla 0
@@ -76,6 +92,10 @@ begin
     3. Zweryfikuj czy Count = 0
     4. Zweryfikuj czy Length(Data)=0
   *)
+  GenerateData(100);
+  GenerateData(0);
+  CheckEquals(0, FBoard.Count, 'Nieodpowiednia ilość danych - count');
+  CheckEquals(0, Length(FBoard.Data), 'Nieodpowiednia ilość danych - length');
 end;
 
 procedure TestTBoard.TestGenerateNegativeNumberOfData;
@@ -105,9 +125,20 @@ begin
 end;
 
 procedure TestTBoard.TestSwapOutOfRangeIndex;
+var
+  wasException: Boolean;
 begin
   // TODO: [TeamD] Zweryfkować czy swap dwóch indeksów dodatkich z poza zakresu
   //   rzuca wyjątkiem
+  wasException := False;
+  GenerateData(10);
+  try
+    FBoard.Swap(56, 47);
+  except
+    on E: EArgumentOutOfRangeException do
+      wasException := True;
+  end;
+  CheckTrue(wasException, 'Swap elementów poza rozmiarem tablicy nie wygenerował wyjątku');
 end;
 
 procedure TestTBoard.TestSortBubble_123;
@@ -126,6 +157,10 @@ procedure TestTBoard.TestSortBubble_111;
 begin
   //  TODO: [TeamD] wypełnij tablicę danymi [1, 1, 1] uruchom sortowanie
   //    bąbelkowe oraz zweryfikuj czy dane wynikowe są posortowanie
+  GenerateData(3, [1,1,1]);
+  CreateAndStartSortThread(FBoard.SortBubble);
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
+  CheckEquals(0, FBoard.FSwapCounter, 'Wykonano conajmniej jedną zmianę tych samych elementów');
 end;
 
 procedure TestTBoard.TestSortBubble_EmptyData;
@@ -135,9 +170,25 @@ begin
 end;
 
 procedure TestTBoard.TestSortBubble_50Random_Range1ToMax;
+var
+  idx: Integer;
 begin
   // TODO: [TeamA] Sprawdź czy sortowanie zadziała poprawnie dla pustego
   // TODO: [TeamD] j.w. = takie same zadanie
+
+  GenerateData(50);
+  for idx := 0 to FBoard.Count - 1 do
+    CheckTrue((FBoard.Data[idx] >= 1) and (FBoard.Data[idx] <= FBoard.MaxValue), Format('Wygenerowano dane przekraczające wyznaczony zakres 1 - %d (wygenerowano: %d)', [FBoard.MaxValue, FBoard.Data[idx]]));
+end;
+
+procedure TestTBoard.CreateAndStartSortThread(AProc: TProc);
+begin
+  TThread.CreateAnonymousThread(
+    procedure
+    begin
+      AProc;
+      FEvent.SetEvent;
+    end).Start;
 end;
 
 procedure TestTBoard.TestSortInsertion_321;
@@ -145,6 +196,14 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie InsertionSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
+  GenerateData(3, [3, 2, 1]);
+  CreateAndStartSortThread(FBoard.SortInsertion);
+
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
+  CheckEquals(1, FBoard.FSwapCounter, 'Niepoprawna ilość swapów');
+  CheckEquals(1, FBoard.Data[0], 'Pierwszy element jest błędny');
+  CheckEquals(2, FBoard.Data[1], 'Drugi element jest błędny');
+  CheckEquals(3, FBoard.Data[2], 'Trzeci element jest błędny');
 end;
 
 procedure TestTBoard.TestSortQuick_321;
@@ -152,6 +211,14 @@ begin
   // TODO: [TeamA] Sprawdzić sortowanie QuickSort na danych [3, 2, 1]
   // TODO: [TeamC] j.w.
   // TODO: [TeamD] j.w.
+  GenerateData(3, [3, 2, 1]);
+  CreateAndStartSortThread(FBoard.SortQuick);
+
+  CheckTrue(FEvent.WaitFor(100) = wrSignaled);
+  CheckEquals(2, FBoard.FSwapCounter, 'Niepoprawna ilość swapów');
+  CheckEquals(1, FBoard.Data[0], 'Pierwszy element jest błędny');
+  CheckEquals(2, FBoard.Data[1], 'Drugi element jest błędny');
+  CheckEquals(3, FBoard.Data[2], 'Trzeci element jest błędny');
 end;
 
 initialization
